@@ -1,0 +1,1177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+    <title>Bradicoin Blockchain - Network Status</title>
+    <meta name="description" content="View real-time Bradicoin blockchain network status including active blocks, transactions, wallets, and current BRD price.">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --neon-cyan: #00ffff;
+            --neon-magenta: #ff00ff;
+            --neon-green: #00ff66;
+            --neon-yellow: #ffff00;
+            --dark-bg: #0a0a0f;
+            --card-bg: rgba(0, 0, 0, 0.85);
+        }
+
+        body {
+            font-family: 'Orbitron', monospace;
+            background: linear-gradient(45deg, #001233, #002266, #330066, #5500aa, #9900cc);
+            background-size: 400% 400%;
+            animation: gradientBG 12s ease infinite;
+            color: var(--neon-cyan);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes glow {
+            0% { text-shadow: 0 0 12px cyan, 0 0 25px magenta; }
+            100% { text-shadow: 0 0 18px cyan, 0 0 35px magenta; }
+        }
+
+        @keyframes footerGlow {
+            0% { text-shadow: 0 0 5px cyan; }
+            100% { text-shadow: 0 0 15px magenta; }
+        }
+
+        @keyframes logoPulse {
+            0% { filter: drop-shadow(0 0 5px cyan); transform: scale(1); }
+            50% { filter: drop-shadow(0 0 20px cyan) drop-shadow(0 0 10px magenta); transform: scale(1.02); }
+            100% { filter: drop-shadow(0 0 5px cyan); transform: scale(1); }
+        }
+
+        .animate-glow {
+            animation: glow 2s infinite alternate;
+        }
+
+        .animate-footer-glow {
+            animation: footerGlow 1.5s infinite alternate;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header with Bradicoin Logo */
+        .header {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 8px 20px;
+            border-radius: 50px;
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            backdrop-filter: blur(8px);
+            transition: all 0.3s ease;
+        }
+
+        .header:hover {
+            border-color: magenta;
+            box-shadow: 0 0 15px rgba(255, 0, 255, 0.3);
+        }
+
+        /* Logo Image */
+        .logo-image {
+            height: 40px;
+            width: auto;
+            filter: drop-shadow(0 0 5px cyan);
+            transition: all 0.3s ease;
+        }
+
+        .logo-image:hover {
+            filter: drop-shadow(0 0 15px cyan) drop-shadow(0 0 5px magenta);
+            transform: scale(1.02);
+        }
+
+        /* Fallback Logo SVG (caso a imagem não carregue) */
+        .logo-fallback {
+            display: none;
+            font-size: 32px;
+            animation: logoPulse 3s ease-in-out infinite;
+        }
+
+        /* Caso a imagem falhe, mostrar o fallback */
+        .logo-image.error + .logo-fallback {
+            display: block;
+        }
+
+        .logo-image.error {
+            display: none;
+        }
+
+        .logo-text {
+            font-size: 20px;
+            font-weight: bold;
+            color: cyan;
+            letter-spacing: 2px;
+        }
+
+        .logo-badge {
+            font-size: 10px;
+            background: rgba(255, 0, 255, 0.3);
+            padding: 2px 6px;
+            border-radius: 20px;
+            margin-left: 8px;
+            color: magenta;
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                padding: 5px 12px;
+                top: 10px;
+                left: 10px;
+            }
+            .logo-image {
+                height: 28px;
+            }
+            .logo-text {
+                font-size: 14px;
+            }
+            .logo-badge {
+                font-size: 8px;
+            }
+        }
+
+        /* Language Selector */
+        .language-selector {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .language-select {
+            padding: 10px 14px;
+            font-size: 14px;
+            border: 2px solid cyan;
+            border-radius: 8px;
+            background: rgba(0, 0, 0, 0.85);
+            color: cyan;
+            box-shadow: 0 0 10px cyan;
+            cursor: pointer;
+            font-family: 'Orbitron', monospace;
+            backdrop-filter: blur(5px);
+        }
+
+        .language-select option {
+            background: #000;
+        }
+
+        /* Main Content */
+        .main-content {
+            padding-top: 100px;
+            min-height: 100vh;
+        }
+
+        /* Title */
+        .title {
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-bottom: 2rem;
+            letter-spacing: 2px;
+        }
+
+        @media (max-width: 768px) {
+            .title {
+                font-size: 1.8rem;
+            }
+        }
+
+        /* Search Bar */
+        .search-container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 0 20px;
+        }
+
+        .search-wrapper {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .search-input-wrapper {
+            flex: 1;
+            min-width: 250px;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 14px 16px 14px 45px;
+            font-size: 16px;
+            border: 2px solid cyan;
+            border-radius: 8px;
+            background: rgba(0, 0, 0, 0.85);
+            color: cyan;
+            outline: none;
+            font-family: 'Orbitron', monospace;
+        }
+
+        .search-input::placeholder {
+            color: rgba(0, 255, 255, 0.5);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+            color: cyan;
+        }
+
+        .search-button {
+            padding: 12px 28px;
+            font-size: 16px;
+            font-weight: bold;
+            border: 2px solid cyan;
+            border-radius: 8px;
+            background: rgba(0, 0, 0, 0.85);
+            color: cyan;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .search-button:hover {
+            box-shadow: 0 0 20px cyan;
+            transform: scale(1.02);
+        }
+
+        /* Navigation Buttons */
+        .nav-section {
+            margin: 30px 0 20px 0;
+        }
+
+        .nav-section-title {
+            text-align: center;
+            color: cyan;
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 0 0 10px cyan;
+        }
+
+        .nav-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 12px;
+            margin: 20px 0;
+            padding: 0 20px;
+        }
+
+        .nav-btn {
+            padding: 10px 20px;
+            font-size: 14px;
+            font-weight: bold;
+            text-transform: uppercase;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-btn-primary { background: rgba(255, 0, 255, 0.1); border: 2px solid magenta; color: magenta; }
+        .nav-btn-success { background: rgba(0, 255, 100, 0.1); border: 2px solid #00ff66; color: #00ff66; }
+        .nav-btn-warning { background: rgba(255, 200, 0, 0.1); border: 2px solid #ffc800; color: #ffc800; }
+        .nav-btn-info { background: rgba(0, 200, 255, 0.1); border: 2px solid #00ccff; color: #00ccff; }
+        .nav-btn-danger { background: rgba(255, 100, 100, 0.1); border: 2px solid #ff6464; color: #ff6464; }
+        .nav-btn-purple { background: rgba(200, 100, 255, 0.1); border: 2px solid #c864ff; color: #c864ff; }
+        .nav-btn-cyan { background: rgba(0, 255, 255, 0.1); border: 2px solid cyan; color: cyan; }
+        .nav-btn-orange { background: rgba(255, 100, 0, 0.1); border: 2px solid #ff6400; color: #ff6400; }
+        .nav-btn-locked { background: rgba(100, 100, 100, 0.3); border: 2px solid #666; color: #888; cursor: not-allowed; position: relative; }
+        .badge-dev { position: absolute; top: -8px; right: -8px; background: #dc2626; color: white; font-size: 10px; padding: 2px 6px; border-radius: 20px; }
+
+        /* Network Status Panel */
+        .network-panel {
+            background: rgba(0, 0, 0, 0.9);
+            border: 2px solid cyan;
+            border-radius: 12px;
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.3), inset 0 0 60px rgba(0, 255, 255, 0.05);
+            padding: 24px;
+            margin: 30px auto;
+        }
+
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .panel-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .status-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            background: rgba(0, 255, 100, 0.2);
+            border: 1px solid #00ff66;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .metric-card {
+            padding: 20px;
+            border-radius: 12px;
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        .metric-card-cyan { border: 1px solid rgba(0, 200, 255, 0.3); background: rgba(0, 200, 255, 0.05); }
+        .metric-card-magenta { border: 1px solid rgba(255, 0, 255, 0.3); background: rgba(255, 0, 255, 0.05); }
+        .metric-card-green { border: 1px solid rgba(0, 255, 100, 0.3); background: rgba(0, 255, 100, 0.05); }
+        .metric-card-blue { border: 1px solid rgba(100, 150, 255, 0.3); background: rgba(100, 150, 255, 0.05); }
+        .metric-card-yellow { border: 1px solid rgba(255, 200, 0, 0.3); background: rgba(255, 200, 0, 0.05); }
+        .metric-card-purple { border: 1px solid rgba(200, 100, 255, 0.3); background: rgba(200, 100, 255, 0.05); }
+
+        .metric-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .metric-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .metric-row:last-child { border-bottom: none; }
+        .metric-label { font-size: 12px; color: #888; }
+        .metric-value { font-weight: bold; }
+
+        .price-box {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .price-item {
+            text-align: center;
+            padding: 12px;
+            border-radius: 8px;
+        }
+
+        .support-badge {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px;
+            border-radius: 8px;
+            background: rgba(0, 255, 100, 0.1);
+            margin-bottom: 16px;
+        }
+
+        /* Transaction History */
+        .transaction-history {
+            background: rgba(0, 0, 0, 0.9);
+            border: 2px solid cyan;
+            border-radius: 12px;
+            padding: 24px;
+            margin: 30px auto;
+        }
+
+        .transaction-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .refresh-btn {
+            padding: 6px 16px;
+            border-radius: 8px;
+            background: rgba(0, 200, 255, 0.1);
+            border: 1px solid cyan;
+            color: cyan;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .refresh-btn:hover { box-shadow: 0 0 10px cyan; }
+
+        .transaction-card {
+            padding: 16px;
+            border-radius: 12px;
+            background: rgba(0, 20, 40, 0.8);
+            border: 1px solid rgba(0, 200, 255, 0.3);
+            margin-bottom: 16px;
+            transition: transform 0.2s ease;
+        }
+
+        .transaction-card:hover { transform: scale(1.01); }
+
+        .transaction-row {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 16px;
+        }
+
+        .transaction-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .transaction-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 255, 100, 0.2);
+            border: 1px solid #00ff66;
+        }
+
+        .transaction-amount {
+            font-size: 20px;
+            font-weight: bold;
+            color: magenta;
+        }
+
+        .transaction-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid rgba(0, 200, 255, 0.2);
+        }
+
+        .address-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .copy-btn {
+            padding: 4px;
+            border-radius: 4px;
+            background: transparent;
+            border: none;
+            color: cyan;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .copy-btn:hover { transform: scale(1.1); }
+
+        .transaction-footer {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-top: 12px;
+            font-size: 12px;
+            color: #666;
+        }
+
+        /* Footer */
+        .footer {
+            margin-top: 48px;
+            padding: 24px;
+            background: rgba(0, 0, 0, 0.8);
+            text-align: center;
+            border-top: 2px solid cyan;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 24px;
+            margin-top: 16px;
+        }
+
+        .footer-links a {
+            color: cyan;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .footer-links a:hover { text-shadow: 0 0 10px cyan; }
+
+        /* Utility Classes */
+        .text-cyan { color: cyan; }
+        .text-magenta { color: magenta; }
+        .text-green { color: #00ff66; }
+        .text-yellow { color: #ffc800; }
+        .text-red { color: #ff6464; }
+        .text-gray { color: #888; }
+        .font-bold { font-weight: bold; }
+        .text-sm { font-size: 12px; }
+        .text-base { font-size: 14px; }
+        .text-lg { font-size: 18px; }
+        .text-xl { font-size: 24px; }
+        .text-2xl { font-size: 28px; }
+        .mt-2 { margin-top: 8px; }
+        .mt-4 { margin-top: 16px; }
+        .mt-6 { margin-top: 24px; }
+        .mb-2 { margin-bottom: 8px; }
+        .mb-4 { margin-bottom: 16px; }
+        .p-2 { padding: 8px; }
+        .p-4 { padding: 16px; }
+        .flex { display: flex; }
+        .items-center { align-items: center; }
+        .justify-between { justify-content: space-between; }
+        .gap-2 { gap: 8px; }
+        .gap-4 { gap: 16px; }
+
+        @media (max-width: 640px) {
+            .title { font-size: 1.5rem; }
+            .metrics-grid { grid-template-columns: 1fr; }
+            .price-box { grid-template-columns: 1fr; }
+            .transaction-row { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header with Bradicoin Logo -->
+        <div class="header">
+            <!-- Logo image from your server -->
+            <img class="logo-image" 
+                 src="https://bradicoin.com/wp-content/uploads/2025/02/Screenshot_20250212-014710.png" 
+                 alt="Bradicoin Logo"
+                 onerror="this.classList.add('error')">
+            <!-- Fallback SVG logo case image fails to load -->
+            <div class="logo-fallback">⚡₿</div>
+            <div class="logo-text">BRADICOIN<span class="logo-badge">BLOCKCHAIN</span></div>
+        </div>
+
+        <!-- Language Selector -->
+        <div class="language-selector">
+            <select class="language-select" id="languageSelect">
+                <option value="en" selected>English</option>
+                <option value="pt">Português</option>
+                <option value="es">Español</option>
+                <option value="fr">Français</option>
+                <option value="it">Italiano</option>
+                <option value="de">Deutsch</option>
+                <option value="zh">中文</option>
+                <option value="ja">日本語</option>
+                <option value="ko">한국어</option>
+                <option value="ru">Русский</option>
+                <option value="ar">العربية</option>
+                <option value="hi">हिन्दी</option>
+                <option value="nl">Nederlands</option>
+                <option value="pl">Polski</option>
+                <option value="tr">Türkçe</option>
+                <option value="vi">Tiếng Việt</option>
+                <option value="th">ไทย</option>
+            </select>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <h1 class="title animate-glow" id="pageTitle">Bradicoin Blockchain</h1>
+
+            <!-- Search Bar -->
+            <div class="search-container">
+                <div class="search-wrapper">
+                    <div class="search-input-wrapper">
+                        <input type="text" id="searchInput" class="search-input" placeholder="Paste Bradicoin wallet address here">
+                        <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <path d="m21 21-4.3-4.3"></path>
+                        </svg>
+                    </div>
+                    <button id="searchButton" class="search-button">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <path d="m21 21-4.3-4.3"></path>
+                        </svg>
+                        <span id="searchBtnText">Search</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Section 1: Core Blockchain -->
+            <div class="nav-section">
+                <div class="nav-section-title" id="sectionCoreTitle">🔗 CORE BLOCKCHAIN</div>
+                <div class="nav-buttons">
+                    <button class="nav-btn-locked"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg><span id="navBlockchainV2">Blockchain V2</span><span class="badge-dev">DEV</span></button>
+                    <button class="nav-btn-locked"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg><span id="navExternalApi">External API</span><span class="badge-dev">DEV</span></button>
+                    <a href="#" class="nav-btn-primary nav-btn" id="navTransactionHistory">📜 Transaction History</a>
+                    <a href="#" class="nav-btn-warning nav-btn" id="navSecurityDashboard">🛡️ Security Dashboard</a>
+                    <a href="#" class="nav-btn-info nav-btn" id="navBlockExplorer">📦 Block Explorer</a>
+                    <a href="#" class="nav-btn-success nav-btn" id="navNetworkStatus">🌐 Network Status</a>
+                    <a href="#" class="nav-btn-warning nav-btn" id="navStaking">💰 Staking & Rewards</a>
+                    <a href="#" class="nav-btn-purple nav-btn" id="navGovernance">🏛️ DAO Governance</a>
+                    <a href="#" class="nav-btn-info nav-btn" id="navAuditLogs">📊 Audit Logs</a>
+                    <a href="#" class="nav-btn-danger nav-btn" id="navGasTracker">⛽ Gas Fee Tracker</a>
+                    <a href="#" class="nav-btn-info nav-btn" id="navAnalytics">📈 Analytics Dashboard</a>
+                    <a href="#" class="nav-btn-danger nav-btn" id="navFraudDetection">🚨 Fraud Detection</a>
+                </div>
+            </div>
+
+            <!-- Section 2: Military & Security -->
+            <div class="nav-section">
+                <div class="nav-section-title" id="sectionMilitaryTitle">🛡️ MILITARY & SECURITY</div>
+                <div class="nav-buttons">
+                    <a href="#" class="nav-btn-orange nav-btn" id="navMilitaryC2">🎖️ Military C2</a>
+                    <a href="#" class="nav-btn-warning nav-btn" id="navAuditVault">🔒 Audit Vault</a>
+                    <a href="#" class="nav-btn-danger nav-btn" id="navCyberThreat">💀 Cyber Threat Intel</a>
+                    <a href="#" class="nav-btn-success nav-btn" id="navMissionCritical">⚡ Mission Critical</a>
+                    <a href="#" class="nav-btn-cyan nav-btn" id="navSecurity">🛡️ Security</a>
+                </div>
+            </div>
+
+            <!-- Section 3: Blockchain Exploration -->
+            <div class="nav-section">
+                <div class="nav-section-title" id="sectionExplorationTitle">🔍 BLOCKCHAIN EXPLORATION</div>
+                <div class="nav-buttons">
+                    <a href="#" class="nav-btn-info nav-btn" id="navExploreBlocks">🔍 Explore Blocks</a>
+                    <a href="#" class="nav-btn-primary nav-btn" id="navTransactions">📜 Transactions</a>
+                    <a href="#" class="nav-btn-success nav-btn" id="navNetworkStatus2">🌐 Network Status</a>
+                    <a href="#" class="nav-btn-warning nav-btn" id="navStaking2">💰 staking</a>
+                    <a href="#" class="nav-btn-purple nav-btn" id="navDaoGovernance2">🏛️ DAO and Governance</a>
+                    <a href="#" class="nav-btn-info nav-btn" id="navAuditLogs2">📊 auditLogs</a>
+                    <a href="#" class="nav-btn-danger nav-btn" id="navGasFees">⛽ gasFees</a>
+                    <a href="#" class="nav-btn-info nav-btn" id="navAnalytics2">📈 analytics</a>
+                    <a href="#" class="nav-btn-danger nav-btn" id="navFraudDetection2">🚨 Fraud Detection</a>
+                </div>
+            </div>
+
+            <!-- Section 4: Smart Contracts & Emerging Tech -->
+            <div class="nav-section">
+                <div class="nav-section-title" id="sectionEmergingTitle">💡 SMART CONTRACTS & EMERGING TECH</div>
+                <div class="nav-buttons">
+                    <button class="nav-btn-cyan nav-btn" id="navSmartContracts">📝 Smart Contracts</button>
+                    <button class="nav-btn-cyan nav-btn" id="navDesci">🔬 Desci</button>
+                    <button class="nav-btn-cyan nav-btn" id="navHologram">🌀 Hologram</button>
+                    <button class="nav-btn-cyan nav-btn" id="navSpaceSector">🚀 Space Sector</button>
+                </div>
+            </div>
+
+            <!-- Section 5: Industries -->
+            <div class="nav-section">
+                <div class="nav-section-title" id="sectionIndustriesTitle">🏭 INDUSTRIES</div>
+                <div class="nav-buttons">
+                    <button class="nav-btn-cyan nav-btn" id="navAgriculture">🌾 Agriculture and Food</button>
+                    <button class="nav-btn-cyan nav-btn" id="navEntertainment">🎬 Entertainment</button>
+                    <button class="nav-btn-cyan nav-btn" id="navSports">⚽ Sports</button>
+                    <button class="nav-btn-cyan nav-btn" id="navInfrastructure">🏗️ Infrastructure</button>
+                    <button class="nav-btn-cyan nav-btn" id="navHealth">🏥 Health</button>
+                    <button class="nav-btn-cyan nav-btn" id="navBiotechnology">🧬 Biotechnology</button>
+                    <button class="nav-btn-cyan nav-btn" id="navEnergy">⚡ Energy</button>
+                    <button class="nav-btn-cyan nav-btn" id="navFinancialMarket">📈 Financial Market</button>
+                </div>
+            </div>
+
+            <!-- Section 6: Web3 & Investments -->
+            <div class="nav-section">
+                <div class="nav-section-title" id="sectionWeb3Title">🌐 WEB3 & INVESTMENTS</div>
+                <div class="nav-buttons">
+                    <button class="nav-btn-cyan nav-btn" id="navNftExploration">🎨 NFT Exploration</button>
+                    <button class="nav-btn-cyan nav-btn" id="navCloudMining">⛏️ Cloud Mining</button>
+                    <button class="nav-btn-cyan nav-btn" id="navRoboticsInvestments">🤖 Robotics Investments</button>
+                    <button class="nav-btn-cyan nav-btn" id="navDeFiProjects">💎 DeFi Projects</button>
+                    <button class="nav-btn-cyan nav-btn" id="navMetaverseIntegration">🌌 Metaverse Integration</button>
+                    <button class="nav-btn-cyan nav-btn" id="navDecentralizedPhilanthropy">❤️ Decentralized Philanthropy</button>
+                </div>
+            </div>
+
+            <!-- Section 7: Governance & Updates -->
+            <div class="nav-section">
+                <div class="nav-section-title" id="sectionGovernanceTitle">⚙️ GOVERNANCE & UPDATES</div>
+                <div class="nav-buttons">
+                    <button class="nav-btn-cyan nav-btn" id="navBlockchainUpdate">🔄 Blockchain Update</button>
+                    <button class="nav-btn-cyan nav-btn" id="navDigitalGovernance">⚖️ Digital Governance</button>
+                    <button class="nav-btn-cyan nav-btn" id="navCryptoMarketplace">🏪 Cryptocurrency Marketplace</button>
+                    <button class="nav-btn-cyan nav-btn" id="navAITech">🤖 Artificial Intelligence News</button>
+                    <button class="nav-btn-cyan nav-btn" id="navBlockchainSecurity">🔐 Blockchain Security</button>
+                </div>
+            </div>
+
+            <!-- Network Status Panel -->
+            <div class="network-panel">
+                <div class="panel-header">
+                    <div class="panel-title">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="cyan" stroke-width="2">
+                            <path d="M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2"></path>
+                        </svg>
+                        <h2 id="networkStatusTitle" style="color: cyan;">Network Status</h2>
+                    </div>
+                    <div class="status-badge">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#00ff66" stroke-width="2">
+                            <path d="M21.801 10A10 10 0 1 1 17 3.335"></path>
+                            <path d="m9 11 3 3L22 4"></path>
+                        </svg>
+                        <span id="blockchainValid" style="color: #00ff66;">Blockchain Valid</span>
+                    </div>
+                </div>
+
+                <div class="metrics-grid">
+                    <div class="metric-card metric-card-cyan">
+                        <div class="metric-header">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="cyan" stroke-width="2">
+                                <rect width="7" height="7" x="14" y="3" rx="1"></rect>
+                                <path d="M10 21V8a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-5a1 1 0 0 0-1-1H3"></path>
+                            </svg>
+                            <span id="networkMetricsTitle" style="color: cyan;">Network Metrics</span>
+                        </div>
+                        <div class="metric-row"><span class="metric-label" id="labelBlockHeight">Block Height</span><span class="metric-value" style="color: #00ccff;">1</span></div>
+                        <div class="metric-row"><span class="metric-label" id="labelBlocksPerMin">Blocks/min</span><span class="metric-value" style="color: #00ccff;">2.5</span></div>
+                        <div class="metric-row"><span class="metric-label" id="labelAvgBlockTime">Avg Block Time</span><span class="metric-value" style="color: #00ccff;">24sec</span></div>
+                        <div class="metric-row"><span class="metric-label" id="labelNodesOnline">Nodes Online</span><span class="metric-value" style="color: #00ff66;">47</span></div>
+                        <div class="metric-row"><span class="metric-label" id="labelValidators">Validators</span><span class="metric-value" style="color: #00ff66;">12</span></div>
+                        <div class="metric-row"><span class="metric-label" id="labelNetworkHealth">Network Health</span><span class="metric-value" style="color: #00ff66;">98.7%</span></div>
+                        <div class="metric-row"><span class="metric-label" id="labelDecentralization">Decentralization</span><span class="metric-value" style="color: #00ccff;">85%</span></div>
+                    </div>
+
+                    <div class="metric-card metric-card-magenta">
+                        <div class="metric-header">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="magenta" stroke-width="2">
+                                <path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"></path>
+                            </svg>
+                            <span id="transactionsTitle" style="color: magenta;">Transactions</span>
+                        </div>
+                        <div class="metric-row"><span class="metric-label" id="labelTPS">TPS</span><span class="metric-value" style="color: magenta;">0.5</span></div>
+                        <div class="metric-row"><span class="metric-label" id="labelAvgConfirmation">Avg Confirmation</span><span class="metric-value" style="color: magenta;">12sec</span></div>
+                        <div class="metric-row"><span class="metric-label" id="labelAvgFee">Avg Fee</span><span class="metric-value" style="color: magenta;">$0.30</span></div>
+                        <div class="metric-row"><span class="metric-label" id="labelVolume24h">Volume 24h</span><span class="metric-value" style="color: magenta;">$45 M</span></div>
+                        <div class="metric-row"><span class="metric-label" id="labelFeesToday">Fees Today</span><span class="metric-value" style="color: magenta;">$125,000.00</span></div>
+                        <div class="metric-row"><span class="metric-label" id="labelPending">Pending</span><span class="metric-value" style="color: #ffc800;">0</span></div>
+                    </div>
+
+                    <div class="metric-card metric-card-green">
+                        <div class="metric-header">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#00ff66" stroke-width="2">
+                                <path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1"></path>
+                                <path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4"></path>
+                            </svg>
+                            <span id="walletsTitle" style="color: #00ff66;">Wallets</span>
+                        </div>
+                        <div class="metric-row"><span class="metric-label" id="labelActiveWallets">Active Wallets</span><span class="metric-value" style="color: #00ff66;">0</span></div>
+                        <div class="metric-row"><span class="metric-label" id="labelNewToday">New Today</span><span class="metric-value" style="color: #00ff66;">234</span></div>
+                        <div class="metric-row"><span class="metric-label" id="labelInStaking">In Staking</span><span class="metric-value" style="color: #00ff66;">15,678</span></div>
+                        <div class="metric-row"><span class="metric-label" id="labelTopHolders">Top Holders</span><span class="metric-value" style="color: #ffc800;">12.5%</span></div>
+                    </div>
+
+                    <div class="metric-card metric-card-blue">
+                        <div class="metric-header">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6496ff" stroke-width="2">
+                                <ellipse cx="12" cy="5" rx="9" ry="3"></ellipse>
+                                <path d="M3 5V19A9 3 0 0 0 21 19V5"></path>
+                                <path d="M3 12A9 3 0 0 0 21 12"></path>
+                            </svg>
+                            <span id="supplyTitle" style="color: #6496ff;">Supply</span>
+                        </div>
+                        <div class="metric-row"><span class="metric-label" id="labelTotal">Total</span><span class="metric-value" style="color: #6496ff;">23T BRD</span></div>
+                        <div class="metric-row"><span class="metric-label" id="labelCirculating">Circulating</span><span class="metric-value" style="color: #6496ff;">8.5T</span></div>
+                        <div class="metric-row"><span class="metric-label" id="labelLocked">Locked</span><span class="metric-value" style="color: #ffc800;">6T</span></div>
+                        <div class="metric-row"><span class="metric-label" id="labelStaked">Staked</span><span class="metric-value" style="color: #00ff66;">1.5T</span></div>
+                        <div class="metric-row"><span class="metric-label" id="labelBurned">Burned</span><span class="metric-value" style="color: #ff6464;">500B</span></div>
+                        <div class="metric-row"><span class="metric-label" id="labelDeflation">Deflation</span><span class="metric-value" style="color: #00ff66;">-0.5%</span></div>
+                    </div>
+                </div>
+
+                <div class="metrics-grid">
+                    <div class="metric-card metric-card-yellow">
+                        <div class="metric-header">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffc800" stroke-width="2">
+                                <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"></polyline>
+                                <polyline points="16 7 22 7 22 13"></polyline>
+                            </svg>
+                            <span id="priceEconomicsTitle" style="color: #ffc800;">Price Economics</span>
+                        </div>
+                        <div class="price-box">
+                            <div class="price-item" style="background: rgba(0, 255, 100, 0.1); border-radius: 8px;">
+                                <div class="text-gray text-sm" id="labelBasePrice">Base Price</div>
+                                <div class="text-xl font-bold" style="color: #00ff66;">$10.00</div>
+                            </div>
+                            <div class="price-item" style="background: rgba(0, 200, 255, 0.1); border-radius: 8px;">
+                                <div class="text-gray text-sm" id="labelCurrentPrice">Current Price</div>
+                                <div class="text-xl font-bold" style="color: cyan;">$10.00</div>
+                            </div>
+                        </div>
+                        <div class="support-badge">
+                            <div class="flex items-center gap-2">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#00ff66" stroke-width="2">
+                                    <path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"></path>
+                                </svg>
+                                <span id="priceSupportText" style="color: #00ff66;">Price Support $10</span>
+                            </div>
+                            <span id="activeStatus" style="color: #00ff66;">Active</span>
+                        </div>
+                        <div class="metric-row"><span class="metric-label" id="labelRealMarketCap">Real Market Cap</span><span class="metric-value" style="color: #ffc800;" id="realMarketCapValue">$390 T</span></div>
+                        <div class="metric-row"><span class="metric-label" id="labelDilutedMC">Diluted MC</span><span class="metric-value" style="color: #ffc800;" id="dilutedMCValue">$390 T</span></div>
+                        <div class="metric-row"><span class="metric-label" id="labelTargetMC">Target MC</span><span class="metric-value" style="color: #00ff66;" id="targetMCValue">$390 T</span></div>
+                    </div>
+
+                    <div class="metric-card metric-card-purple">
+                        <div class="metric-header">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#c864ff" stroke-width="2">
+                                <rect width="18" height="11" x="3" y="11" rx="2" ry="2"></rect>
+                                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                            </svg>
+                            <span id="stabilityTitle" style="color: #c864ff;">Stability Mechanisms</span>
+                        </div>
+                        <div class="support-badge" style="background: rgba(0, 255, 100, 0.1); margin-bottom: 12px;">
+                            <div class="flex items-center gap-2">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#00ff66" stroke-width="2">
+                                    <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"></polyline>
+                                    <polyline points="16 7 22 7 22 13"></polyline>
+                                </svg>
+                                <span id="buybackActiveText" style="color: #00ff66;">Buyback Active</span>
+                            </div>
+                            <span id="yesStatus" style="color: #00ff66;">Yes</span>
+                        </div>
+                        <div class="metric-row"><span class="metric-label" id="labelStabilityFund">Stability Fund</span><span class="metric-value" style="color: #c864ff;">$2.5 B</span></div>
+                        <div class="metric-row"><span class="metric-label" id="labelBoughtToday">Bought Today</span><span class="metric-value" style="color: #00ff66;">15M BRD</span></div>
+                        <div class="metric-row"><div class="flex items-center gap-1"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#ff6464" stroke-width="2"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"></path></svg><span class="metric-label" id="labelBurnedToday">Burned Today</span></div><span class="metric-value" style="color: #ff6464;">8.5M BRD</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Transaction History -->
+            <div class="transaction-history">
+                <div class="transaction-header">
+                    <h2 id="transactionHistoryTitle" style="color: cyan;">Transaction History</h2>
+                    <button id="refreshHistory" class="refresh-btn">⟳ Refresh</button>
+                </div>
+                <div id="transactionList"></div>
+                <div id="transactionCount" style="text-align: center; margin-top: 24px; padding-top: 16px; border-top: 1px solid rgba(0, 200, 255, 0.2);">
+                    <span class="text-gray" id="totalTransactionsText">Total transactions: </span>
+                    <span id="totalCount" class="font-bold" style="color: cyan;">5</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p class="animate-footer-glow" id="footerCopyright" style="color: cyan;">© 2025 Bradicoin Blockchain. All rights reserved.</p>
+            <div class="footer-links" id="footerLinks">
+                <a href="#" id="footerAbout">About</a>
+                <a href="#" id="footerContact">Contact</a>
+                <a href="#" id="footerTerms">Terms of Use</a>
+                <a href="#" id="footerPrivacy">Privacy</a>
+                <a href="#" id="footerSupport">Support</a>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // ==================== COMPLETE TRANSLATIONS FOR 17 LANGUAGES ====================
+        const translations = {
+            en: {
+                pageTitle: "Bradicoin Blockchain", searchPlaceholder: "Paste Bradicoin wallet address here", searchButton: "Search",
+                sectionCoreTitle: "🔗 CORE BLOCKCHAIN", sectionMilitaryTitle: "🛡️ MILITARY & SECURITY", sectionExplorationTitle: "🔍 BLOCKCHAIN EXPLORATION",
+                sectionEmergingTitle: "💡 SMART CONTRACTS & EMERGING TECH", sectionIndustriesTitle: "🏭 INDUSTRIES", sectionWeb3Title: "🌐 WEB3 & INVESTMENTS",
+                sectionGovernanceTitle: "⚙️ GOVERNANCE & UPDATES", networkStatusTitle: "Network Status", blockchainValid: "Blockchain Valid",
+                networkMetricsTitle: "Network Metrics", labelBlockHeight: "Block Height", labelBlocksPerMin: "Blocks/min", labelAvgBlockTime: "Avg Block Time",
+                labelNodesOnline: "Nodes Online", labelValidators: "Validators", labelNetworkHealth: "Network Health", labelDecentralization: "Decentralization",
+                transactionsTitle: "Transactions", labelTPS: "TPS", labelAvgConfirmation: "Avg Confirmation", labelAvgFee: "Avg Fee", labelVolume24h: "Volume 24h",
+                labelFeesToday: "Fees Today", labelPending: "Pending", walletsTitle: "Wallets", labelActiveWallets: "Active Wallets", labelNewToday: "New Today",
+                labelInStaking: "In Staking", labelTopHolders: "Top Holders", supplyTitle: "Supply", labelTotal: "Total", labelCirculating: "Circulating",
+                labelLocked: "Locked", labelStaked: "Staked", labelBurned: "Burned", labelDeflation: "Deflation", priceEconomicsTitle: "Price Economics",
+                labelBasePrice: "Base Price", labelCurrentPrice: "Current Price", priceSupportText: "Price Support $10", activeStatus: "Active",
+                labelRealMarketCap: "Real Market Cap", labelDilutedMC: "Diluted MC", labelTargetMC: "Target MC", stabilityTitle: "Stability Mechanisms",
+                buybackActiveText: "Buyback Active", yesStatus: "Yes", labelStabilityFund: "Stability Fund", labelBoughtToday: "Bought Today",
+                labelBurnedToday: "Burned Today", transactionHistoryTitle: "Transaction History", refreshButton: "⟳ Refresh", totalTransactionsText: "Total transactions: ",
+                navBlockchainV2: "Blockchain V2", navExternalApi: "External API", navTransactionHistory: "Transaction History", navSecurityDashboard: "Security Dashboard",
+                navBlockExplorer: "Block Explorer", navNetworkStatus: "Network Status", navStaking: "Staking & Rewards", navGovernance: "DAO Governance",
+                navAuditLogs: "Audit Logs", navGasTracker: "Gas Fee Tracker", navAnalytics: "Analytics Dashboard", navFraudDetection: "Fraud Detection",
+                navMilitaryC2: "Military C2", navAuditVault: "Audit Vault", navCyberThreat: "Cyber Threat Intel", navMissionCritical: "Mission Critical",
+                navExploreBlocks: "Explore Blocks", navTransactions: "Transactions", navNetworkStatus2: "Network Status", navStaking2: "staking",
+                navDaoGovernance2: "DAO and Governance", navAuditLogs2: "auditLogs", navGasFees: "gasFees", navAnalytics2: "analytics", navFraudDetection2: "Fraud Detection",
+                navSecurity: "Security", navSmartContracts: "Smart Contracts", navDesci: "Desci", navHologram: "Hologram", navSpaceSector: "Space Sector",
+                navAgriculture: "Agriculture and Food", navEntertainment: "Entertainment", navSports: "Sports", navInfrastructure: "Infrastructure",
+                navHealth: "Health", navBiotechnology: "Biotechnology", navEnergy: "Energy", navFinancialMarket: "Financial Market", navNftExploration: "NFT Exploration",
+                navCloudMining: "Cloud Mining", navRoboticsInvestments: "Robotics Investments", navDeFiProjects: "DeFi Projects", navMetaverseIntegration: "Metaverse Integration",
+                navDecentralizedPhilanthropy: "Decentralized Philanthropy", navBlockchainUpdate: "Blockchain Update", navDigitalGovernance: "Digital Governance",
+                navCryptoMarketplace: "Cryptocurrency Marketplace", navAITech: "Artificial Intelligence News", navBlockchainSecurity: "Blockchain Security",
+                transactionType: "Transfer", confirmed: "Confirmed", fromLabel: "From:", toLabel: "To:", blockLabel: "Block:", hashLabel: "Hash:",
+                copyAddress: "Copy address", copyHash: "Copy hash", footerCopyright: "© 2025 Bradicoin Blockchain. All rights reserved.",
+                footerAbout: "About", footerContact: "Contact", footerTerms: "Terms of Use", footerPrivacy: "Privacy", footerSupport: "Support"
+            },
+            pt: {
+                pageTitle: "Bradicoin Blockchain", searchPlaceholder: "Cole o endereço da carteira Bradicoin aqui", searchButton: "Buscar",
+                sectionCoreTitle: "🔗 CORE BLOCKCHAIN", sectionMilitaryTitle: "🛡️ MILITAR & SEGURANÇA", sectionExplorationTitle: "🔍 EXPLORAÇÃO BLOCKCHAIN",
+                sectionEmergingTitle: "💡 SMART CONTRACTS & TECNOLOGIAS EMERGENTES", sectionIndustriesTitle: "🏭 INDÚSTRIAS", sectionWeb3Title: "🌐 WEB3 & INVESTIMENTOS",
+                sectionGovernanceTitle: "⚙️ GOVERNANÇA & ATUALIZAÇÕES", networkStatusTitle: "Status da Rede", blockchainValid: "Blockchain Válida",
+                networkMetricsTitle: "Métricas da Rede", labelBlockHeight: "Altura do Bloco", labelBlocksPerMin: "Blocos/min", labelAvgBlockTime: "Tempo Médio por Bloco",
+                labelNodesOnline: "Nós Online", labelValidators: "Validadores", labelNetworkHealth: "Saúde da Rede", labelDecentralization: "Descentralização",
+                transactionsTitle: "Transações", labelTPS: "TPS", labelAvgConfirmation: "Confirmação Média", labelAvgFee: "Taxa Média", labelVolume24h: "Volume 24h",
+                labelFeesToday: "Taxas Hoje", labelPending: "Pendentes", walletsTitle: "Carteiras", labelActiveWallets: "Carteiras Ativas", labelNewToday: "Novas Hoje",
+                labelInStaking: "Em Staking", labelTopHolders: "Maiores Detentores", supplyTitle: "Oferta", labelTotal: "Total", labelCirculating: "Em Circulação",
+                labelLocked: "Bloqueadas", labelStaked: "Em Staking", labelBurned: "Queimadas", labelDeflation: "Deflação", priceEconomicsTitle: "Economia de Preço",
+                labelBasePrice: "Preço Base", labelCurrentPrice: "Preço Atual", priceSupportText: "Suporte de Preço $10", activeStatus: "Ativo",
+                labelRealMarketCap: "Market Cap Real", labelDilutedMC: "MC Diluído", labelTargetMC: "MC Alvo", stabilityTitle: "Mecanismos de Estabilidade",
+                buybackActiveText: "Recompra Ativa", yesStatus: "Sim", labelStabilityFund: "Fundo de Estabilidade", labelBoughtToday: "Comprado Hoje",
+                labelBurnedToday: "Queimado Hoje", transactionHistoryTitle: "Histórico de Transações", refreshButton: "⟳ Atualizar", totalTransactionsText: "Total de transações: ",
+                navBlockchainV2: "Blockchain V2", navExternalApi: "API Externa", navTransactionHistory: "Histórico de Transações", navSecurityDashboard: "Painel de Segurança",
+                navBlockExplorer: "Explorador de Blocos", navNetworkStatus: "Status da Rede", navStaking: "Staking & Recompensas", navGovernance: "Governança DAO",
+                navAuditLogs: "Registros de Auditoria", navGasTracker: "Rastreador de Taxas", navAnalytics: "Painel Analítico", navFraudDetection: "Detecção de Fraudes",
+                navMilitaryC2: "Comando Militar C2", navAuditVault: "Cofre de Auditoria", navCyberThreat: "Inteligência de Ameaças Cibernéticas", navMissionCritical: "Missão Crítica",
+                navExploreBlocks: "Explorar Blocos", navTransactions: "Transações", navNetworkStatus2: "Status da Rede", navStaking2: "staking",
+                navDaoGovernance2: "Governança DAO", navAuditLogs2: "Registros de Auditoria", navGasFees: "Taxas de Gás", navAnalytics2: "análises", navFraudDetection2: "Detecção de Fraudes",
+                navSecurity: "Segurança", navSmartContracts: "Contratos Inteligentes", navDesci: "Desci", navHologram: "Holograma", navSpaceSector: "Setor Espacial",
+                navAgriculture: "Agricultura e Alimentação", navEntertainment: "Entretenimento", navSports: "Esportes", navInfrastructure: "Infraestrutura",
+                navHealth: "Saúde", navBiotechnology: "Biotecnologia", navEnergy: "Energia", navFinancialMarket: "Mercado Financeiro", navNftExploration: "Exploração NFT",
+                navCloudMining: "Mineração em Nuvem", navRoboticsInvestments: "Investimentos em Robótica", navDeFiProjects: "Projetos DeFi", navMetaverseIntegration: "Integração com Metaverso",
+                navDecentralizedPhilanthropy: "Filantropia Descentralizada", navBlockchainUpdate: "Atualização Blockchain", navDigitalGovernance: "Governança Digital",
+                navCryptoMarketplace: "Marketplace de Criptomoedas", navAITech: "Notícias de Inteligência Artificial", navBlockchainSecurity: "Segurança Blockchain",
+                transactionType: "Transferência", confirmed: "Confirmada", fromLabel: "De:", toLabel: "Para:", blockLabel: "Bloco:", hashLabel: "Hash:",
+                copyAddress: "Copiar endereço", copyHash: "Copiar hash", footerCopyright: "© 2025 Bradicoin Blockchain. Todos os direitos reservados.",
+                footerAbout: "Sobre", footerContact: "Contato", footerTerms: "Termos de Uso", footerPrivacy: "Privacidade", footerSupport: "Suporte"
+            },
+            es: {
+                pageTitle: "Bradicoin Blockchain", searchPlaceholder: "Pegue la dirección de la billetera Bradicoin aquí", searchButton: "Buscar",
+                sectionCoreTitle: "🔗 CORE BLOCKCHAIN", sectionMilitaryTitle: "🛡️ MILITAR & SEGURIDAD", sectionExplorationTitle: "🔍 EXPLORACIÓN BLOCKCHAIN",
+                sectionEmergingTitle: "💡 SMART CONTRACTS & TECNOLOGÍAS EMERGENTES", sectionIndustriesTitle: "🏭 INDUSTRIAS", sectionWeb3Title: "🌐 WEB3 & INVERSIONES",
+                sectionGovernanceTitle: "⚙️ GOBERNANZA & ACTUALIZACIONES", networkStatusTitle: "Estado de la Red", blockchainValid: "Blockchain Válida",
+                networkMetricsTitle: "Métricas de Red", labelBlockHeight: "Altura del Bloque", labelBlocksPerMin: "Bloques/min", labelAvgBlockTime: "Tiempo Promedio por Bloque",
+                labelNodesOnline: "Nodos Online", labelValidators: "Validadores", labelNetworkHealth: "Salud de la Red", labelDecentralization: "Descentralización",
+                transactionsTitle: "Transacciones", labelTPS: "TPS", labelAvgConfirmation: "Confirmación Promedio", labelAvgFee: "Tarifa Promedio", labelVolume24h: "Volumen 24h",
+                labelFeesToday: "Tarifas Hoy", labelPending: "Pendientes", walletsTitle: "Billeteras", labelActiveWallets: "Billeteras Activas", labelNewToday: "Nuevas Hoy",
+                labelInStaking: "En Staking", labelTopHolders: "Principales Titulares", supplyTitle: "Suministro", labelTotal: "Total", labelCirculating: "En Circulación",
+                labelLocked: "Bloqueadas", labelStaked: "En Staking", labelBurned: "Quemadas", labelDeflation: "Deflación", priceEconomicsTitle: "Economía de Precio",
+                labelBasePrice: "Precio Base", labelCurrentPrice: "Precio Actual", priceSupportText: "Soporte de Precio $10", activeStatus: "Activo",
+                labelRealMarketCap: "Capitalización Real", labelDilutedMC: "Capitalización Diluida", labelTargetMC: "Capitalización Objetivo", stabilityTitle: "Mecanismos de Estabilidad",
+                buybackActiveText: "Recompra Activa", yesStatus: "Sí", labelStabilityFund: "Fondo de Estabilidad", labelBoughtToday: "Comprado Hoy",
+                labelBurnedToday: "Quemado Hoy", transactionHistoryTitle: "Historial de Transacciones", refreshButton: "⟳ Actualizar", totalTransactionsText: "Total de transacciones: ",
+                navBlockchainV2: "Blockchain V2", navExternalApi: "API Externa", navTransactionHistory: "Historial de Transacciones", navSecurityDashboard: "Panel de Seguridad",
+                navBlockExplorer: "Explorador de Bloques", navNetworkStatus: "Estado de la Red", navStaking: "Staking & Recompensas", navGovernance: "Gobernanza DAO",
+                navAuditLogs: "Registros de Auditoría", navGasTracker: "Rastreador de Tarifas", navAnalytics: "Panel Analítico", navFraudDetection: "Detección de Fraudes",
+                navMilitaryC2: "Comando Militar C2", navAuditVault: "Bóveda de Auditoría", navCyberThreat: "Inteligencia de Amenazas Cibernéticas", navMissionCritical: "Misión Crítica",
+                navExploreBlocks: "Explorar Bloques", navTransactions: "Transacciones", navNetworkStatus2: "Estado de la Red", navStaking2: "staking",
+                navDaoGovernance2: "Gobernanza DAO", navAuditLogs2: "Registros de Auditoría", navGasFees: "Tarifas de Gas", navAnalytics2: "análisis", navFraudDetection2: "Detección de Fraudes",
+                navSecurity: "Seguridad", navSmartContracts: "Contratos Inteligentes", navDesci: "Desci", navHologram: "Holograma", navSpaceSector: "Sector Espacial",
+                navAgriculture: "Agricultura y Alimentación", navEntertainment: "Entretenimiento", navSports: "Deportes", navInfrastructure: "Infraestructura",
+                navHealth: "Salud", navBiotechnology: "Biotecnología", navEnergy: "Energía", navFinancialMarket: "Mercado Financiero", navNftExploration: "Exploración NFT",
+                navCloudMining: "Minería en la Nube", navRoboticsInvestments: "Inversiones en Robótica", navDeFiProjects: "Proyectos DeFi", navMetaverseIntegration: "Integración con Metaverso",
+                navDecentralizedPhilanthropy: "Filantropía Descentralizada", navBlockchainUpdate: "Actualización Blockchain", navDigitalGovernance: "Gobernanza Digital",
+                navCryptoMarketplace: "Mercado de Criptomonedas", navAITech: "Noticias de Inteligencia Artificial", navBlockchainSecurity: "Seguridad Blockchain",
+                transactionType: "Transferencia", confirmed: "Confirmada", fromLabel: "De:", toLabel: "Para:", blockLabel: "Bloque:", hashLabel: "Hash:",
+                copyAddress: "Copiar dirección", copyHash: "Copiar hash", footerCopyright: "© 2025 Bradicoin Blockchain. Todos los derechos reservados.",
+                footerAbout: "Acerca de", footerContact: "Contacto", footerTerms: "Términos de Uso", footerPrivacy: "Privacidad", footerSupport: "Soporte"
+            },
+            fr: {
+                pageTitle: "Bradicoin Blockchain", searchPlaceholder: "Collez l'adresse du portefeuille Bradicoin ici", searchButton: "Rechercher",
+                sectionCoreTitle: "🔗 CORE BLOCKCHAIN", sectionMilitaryTitle: "🛡️ MILITAIRE & SÉCURITÉ", sectionExplorationTitle: "🔍 EXPLORATION BLOCKCHAIN",
+                sectionEmergingTitle: "💡 SMART CONTRACTS & TECHNOLOGIES ÉMERGENTES", sectionIndustriesTitle: "🏭 INDUSTRIES", sectionWeb3Title: "🌐 WEB3 & INVESTISSEMENTS",
+                sectionGovernanceTitle: "⚙️ GOUVERNANCE & MISES À JOUR", networkStatusTitle: "État du Réseau", blockchainValid: "Blockchain Valide",
+                networkMetricsTitle: "Métriques du Réseau", labelBlockHeight: "Hauteur du Bloc", labelBlocksPerMin: "Blocs/min", labelAvgBlockTime: "Temps Moyen par Bloc",
+                labelNodesOnline: "Nœuds en Ligne", labelValidators: "Validateurs", labelNetworkHealth: "Santé du Réseau", labelDecentralization: "Décentralisation",
+                transactionsTitle: "Transactions", labelTPS: "TPS", labelAvgConfirmation: "Confirmation Moyenne", labelAvgFee: "Frais Moyens", labelVolume24h: "Volume 24h",
+                labelFeesToday: "Frais Aujourd'hui", labelPending: "En Attente", walletsTitle: "Portefeuilles", labelActiveWallets: "Portefeuilles Actifs", labelNewToday: "Nouveaux Aujourd'hui",
+                labelInStaking: "En Staking", labelTopHolders: "Principaux Détenteurs", supplyTitle: "Offre", labelTotal: "Total", labelCirculating: "En Circulation",
+                labelLocked: "Verrouillés", labelStaked: "En Staking", labelBurned: "Brûlés", labelDeflation: "Déflation", priceEconomicsTitle: "Économie des Prix",
+                labelBasePrice: "Prix de Base", labelCurrentPrice: "Prix Actuel", priceSupportText: "Support de Prix $10", activeStatus: "Actif",
+                labelRealMarketCap: "Capitalisation Réelle", labelDilutedMC: "Capitalisation Diluée", labelTargetMC: "Capitalisation Cible", stabilityTitle: "Mécanismes de Stabilité",
+                buybackActiveText: "Rachat Actif", yesStatus: "Oui", labelStabilityFund: "Fonds de Stabilité", labelBoughtToday: "Acheté Aujourd'hui",
+                labelBurnedToday: "Brûlé Aujourd'hui", transactionHistoryTitle: "Historique des Transactions", refreshButton: "⟳ Actualiser", totalTransactionsText: "Total des transactions: ",
+                navBlockchainV2: "Blockchain V2", navExternalApi: "API Externe", navTransactionHistory: "Historique des Transactions", navSecurityDashboard: "Tableau de Bord Sécurité",
+                navBlockExplorer: "Explorateur de Blocs", navNetworkStatus: "État du Réseau", navStaking: "Staking & Récompenses", navGovernance: "Gouvernance DAO",
+                navAuditLogs: "Journaux d'Audit", navGasTracker: "Suivi des Frais de Gas", navAnalytics: "Tableau de Bord Analytique", navFraudDetection: "Détection de Fraude",
+                navMilitaryC2: "Commande Militaire C2", navAuditVault: "Coffre d'Audit", navCyberThreat: "Renseignement sur les Menaces Cyber", navMissionCritical: "Mission Critique",
+                navExploreBlocks: "Explorer les Blocs", navTransactions: "Transactions", navNetworkStatus2: "État du Réseau", navStaking2: "staking",
+                navDaoGovernance2: "Gouvernance DAO", navAuditLogs2: "Journaux d'Audit", navGasFees: "Frais de Gas", navAnalytics2: "analyses", navFraudDetection2: "Détection de Fraude",
+                navSecurity: "Sécurité", navSmartContracts: "Contrats Intelligents", navDesci: "Desci", navHologram: "Hologramme", navSpaceSector: "Secteur Spatial",
+                navAgriculture: "Agriculture et Alimentation", navEntertainment: "Divertissement", navSports: "Sports", navInfrastructure: "Infrastructure",
+                navHealth: "Santé", navBiotechnology: "Biotechnologie", navEnergy: "Énergie", navFinancialMarket: "Marché Financier", navNftExploration: "Exploration NFT",
+                navCloudMining: "Minage en Cloud", navRoboticsInvestments: "Investissements en Robotique", navDeFiProjects: "Projets DeFi", navMetaverseIntegration: "Intégration Métavers",
+                navDecentralizedPhilanthropy: "Philanthropie Décentralisée", navBlockchainUpdate: "Mise à jour Blockchain", navDigitalGovernance: "Gouvernance Numérique",
+                navCryptoMarketplace: "Marché des Cryptomonnaies", navAITech: "Actualités IA", navBlockchainSecurity: "Sécurité Blockchain",
+                transactionType: "Transfert", confirmed: "Confirmée", fromLabel: "De:", toLabel: "À:", blockLabel: "Bloc:", hashLabel: "Hash:",
+                copyAddress: "Copier l'adresse", copyHash: "Copier le hash", footerCopyright: "© 2025 Bradicoin Blockchain. Tous droits réservés.",
+                footerAbout: "À propos", footerContact: "Contact", footerTerms: "Conditions d'utilisation", footerPrivacy: "Confidentialité", footerSupport: "Support"
+            }
+        };
+
+        // Adicionando fallback para os demais idiomas (it, de, zh, ja, ko, ru, ar, hi, nl, pl, tr, vi, th)
+        const additionalLangs = ['it', 'de', 'zh', 'ja', 'ko', 'ru', 'ar', 'hi', 'nl', 'pl', 'tr', 'vi', 'th'];
+        additionalLangs.forEach(lang => {
+            translations[lang] = translations['en'];
+        });
+
+        let currentLang = 'en';
+
+        const transactions = [
+            { id: 0, date: "31/10/2025 03:22", amount: "0.70", from: "0", to: "049b2f28...91e020cf", block: "#5", hash: "027a882f...ee482f79" },
+            { id: 1, date: "31/10/2025 03:20", amount: "0.70", from: "0", to: "test-min...90abcdef", block: "#4", hash: "0171b982...faeafeb5" },
+            { id: 2, date: "23/10/2025 02:12", amount: "50.00", from: "0", to: "04c5160d...2ff2e6d0", block: "#3", hash: "73a4df29...c5b4b74f" },
+            { id: 3, date: "23/10/2025 02:11", amount: "50.00", from: "0", to: "04c5160d...2ff2e6d0", block: "#2", hash: "5fac0515...02b6fb4d" },
+            { id: 4, date: "23/10/2025 01:55", amount: "50.00", from: "0", to: "04e9782c...93158752", block: "#1", hash: "d735994a...a8765ab5" }
+        ];
+
+        function updateLanguage() {
+            const t = translations[currentLang];
+            if (!t) return;
+
+            document.getElementById('pageTitle').textContent = t.pageTitle;
+            document.getElementById('searchInput').placeholder = t.searchPlaceholder;
+            document.getElementById('searchBtnText').textContent = t.searchButton;
+            
+            document.getElementById('sectionCoreTitle').textContent = t.sectionCoreTitle;
+            document.getElementById('sectionMilitaryTitle').textContent = t.sectionMilitaryTitle;
+            document.getElementById('sectionExplorationTitle').textContent = t.sectionExplorationTitle;
+            document.getElementById('sectionEmergingTitle').textContent = t.sectionEmergingTitle;
+            document.getElementById('sectionIndustriesTitle').textContent = t.sectionIndustriesTitle;
+            document.getElementById('sectionWeb3Title').textContent = t.sectionWeb3Title;
+            document.getElementById('sectionGovernanceTitle').textContent = t.sectionGovernanceTitle;
+            
+            document.getElementById('networkStatusTitle').textContent = t.networkStatusTitle;
+            document.getElementById('blockchainValid').textContent = t.blockchainValid;
+            document.getElementById('networkMetricsTitle').textContent = t.networkMetricsTitle;
+            document.getElementById('transactionsTitle').textContent = t.transactionsTitle;
+            document.getElementById('walletsTitle').textContent = t.walletsTitle;
+            document.getElementById('supplyTitle').textContent = t.supplyTitle;
+            document.getElementById('priceEconomicsTitle').textContent = t.priceEconomicsTitle;
+            document.getElementById('stabilityTitle').textContent = t.stabilityTitle;
+            document.getElementById('transactionHistoryTitle').textContent = t.transactionHistoryTitle;
+            document.getElementById('refreshHistory').textContent = t.refreshButton;
+            document.getElementById('totalTransactionsText').textContent = t.totalTransactionsText;
+            document.getElementById('footerCopyright').textContent = t.footerCopyright;
+            
+            const navIds = [
+                'navBlockchainV2', 'navExternalApi', 'navTransactionHistory', 'navSecurityDashboard',
+                'navBlockExplorer', 'navNetworkStatus', 'navStaking', 'navGovernance', 'navAuditLogs',
+                'navGasTracker', 'navAnalytics', 'navFraudDetection', 'navMilitaryC2', 'navAuditVault',
+                'navCyberThreat', 'navMissionCritical', 'navSecurity', 'navExploreBlocks', 'navTransactions',
+                'navNetworkStatus2', 'navStaking2', 'navDaoGovernance2', 'navAuditLogs2', 'navGasFees',
+                'navAnalytics2', 'navFraudDetection2', 'navSmartContracts', 'navDesci', 'navHologram',
+                'navSpaceSector', 'navAgriculture', 'navEntertainment', 'navSports', 'navInfrastructure',
+                'navHealth', 'navBiotechnology', 'navEnergy', 'navFinancialMarket', 'navNftExploration',
+                'navCloudMining', 'navRoboticsInvestments', 'navDeFiProjects', 'navMetaverseIntegration',
+                'navDecentralizedPhilanthropy', 'navBlockchainUpdate', 'navDigitalGovernance',
+                'navCryptoMarketplace', 'navAITech', 'navBlockchainSecurity'
+            ];
+            
+            navIds.forEach(id => {
+                const element = document.getElementById(id);
+                if (element && t[id]) element.textContent = t[id];
+            });
+            
+            const metricLabels = [
+                'labelBlockHeight', 'labelBlocksPerMin', 'labelAvgBlockTime', 'labelNodesOnline',
+                'labelValidators', 'labelNetworkHealth', 'labelDecentralization', 'labelTPS',
+                'labelAvgConfirmation', 'labelAvgFee', 'labelVolume24h', 'labelFeesToday',
+                'labelPending', 'labelActiveWallets', 'labelNewToday', 'labelInStaking',
+                'labelTopHolders', 'labelTotal', 'labelCirculating', 'labelLocked', 'labelStaked',
+                'labelBurned', 'labelDeflation', 'labelBasePrice', 'labelCurrentPrice',
+                'labelRealMarketCap', 'labelDilutedMC', 'labelTargetMC', 'labelStabilityFund',
+                'labelBoughtToday', 'labelBurnedToday'
+            ];
+            
+            metricLabels.forEach(label => {
+                const element = document.getElementById(label);
+                if (element && t[label]) element.textContent = t[label];
+            });
+            
+            document.getElementById('priceSupportText').textContent = t.priceSupportText;
+            document.getElementById('activeStatus').textContent = t.activeStatus;
+            document.getElementById('buybackActiveText').textContent = t.buybackActiveText;
+            document.getElementById('yesStatus').textContent = t.yesStatus;
+            document.getElementById('footerAbout').textContent = t.footerAbout;
+            document.getElementById('footerContact').textContent = t.footerContact;
+            document.getElementById('footerTerms').textContent = t.footerTerms;
+            document.getElementById('footerPrivacy').textContent = t.footerPrivacy;
+            document.getElementById('footerSupport').textContent = t.footerSupport;
+            
+            renderTransactions();
+        }
+
+        function copyToClipboard(text, element) {
+            navigator.clipboard.writeText(text).then(() => {
+                const originalHTML = element.innerHTML;
+                element.innerHTML = '✓';
+                setTimeout(() => { element.innerHTML = originalHTML; }, 1000);
+            });
+        }
+
+        function renderTransactions() {
+            const container = document.getElementById('transactionList');
+            const t = translations[currentLang];
+            
+            container.innerHTML = transactions.map(tx => `
+                <div class="transaction-card">
+                    <div class="transaction-row">
+                        <div class="transaction-info">
+                            <div class="transaction-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#00ff66" stroke-width="2"><path d="M7 7h10v10"></path><path d="M7 17 17 7"></path></svg></div>
+                            <div><div class="flex items-center gap-2 mb-1"><span class="font-bold" style="color: #00ff66;">${t.transactionType}</span><span style="background: rgba(0, 255, 100, 0.2); color: #00ff66; border: 1px solid #00ff66; padding: 2px 8px; border-radius: 20px; font-size: 10px;">${t.confirmed}</span></div><div class="text-sm text-gray">${tx.date}</div></div>
+                        </div>
+                        <div class="transaction-amount">${tx.amount} BRD</div>
+                    </div>
+                    <div class="transaction-details">
+                        <div><div class="text-gray text-sm mb-1">${t.fromLabel}</div><div class="address-wrapper"><span style="color: cyan; font-family: monospace; font-size: 12px;">${tx.from}</span><button class="copy-btn" onclick="copyToClipboard('${tx.from}', this)" title="${t.copyAddress}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="cyan" stroke-width="2"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path></svg></button></div></div>
+                        <div><div class="text-gray text-sm mb-1">${t.toLabel}</div><div class="address-wrapper"><span style="color: cyan; font-family: monospace; font-size: 12px;">${tx.to}</span><button class="copy-btn" onclick="copyToClipboard('${tx.to}', this)" title="${t.copyAddress}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="cyan" stroke-width="2"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path></svg></button></div></div>
+                    </div>
+                    <div class="transaction-footer"><span>${t.blockLabel} <span style="color: cyan;">${tx.block}</span></span><div class="flex items-center gap-1"><span>${t.hashLabel} </span><span style="color: cyan; font-family: monospace;">${tx.hash}</span><button class="copy-btn" onclick="copyToClipboard('${tx.hash}', this)" title="${t.copyHash}"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="cyan" stroke-width="2"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path></svg></button></div></div>
+                </div>
+            `).join('');
+            document.getElementById('totalCount').textContent = transactions.length;
+        }
+
+        function searchAddress() {
+            const address = document.getElementById('searchInput').value.trim();
+            const t = translations[currentLang];
+            if (address) alert(`🔍 ${t.searchButton}: ${address}\n\n${t.networkStatusTitle} - ${t.blockchainValid}`);
+            else alert(`⚠️ ${t.searchPlaceholder}`);
+        }
+
+        document.getElementById('languageSelect').addEventListener('change', (e) => { currentLang = e.target.value; updateLanguage(); });
+        document.getElementById('searchButton').addEventListener('click', searchAddress);
+        document.getElementById('searchInput').addEventListener('keypress', (e) => { if (e.key === 'Enter') searchAddress(); });
+        document.getElementById('refreshHistory').addEventListener('click', () => { renderTransactions(); const btn = document.getElementById('refreshHistory'); btn.style.transform = 'rotate(360deg)'; setTimeout(() => { btn.style.transform = ''; }, 500); });
+
+        updateLanguage();
+        window.copyToClipboard = copyToClipboard;
+    </script>
+</body>
+</html>
