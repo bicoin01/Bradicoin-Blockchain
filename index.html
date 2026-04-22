@@ -181,6 +181,31 @@
         .modal-inner { background: rgba(0, 0, 0, 0.9); border: 2px solid cyan; border-radius: 15px; padding: 30px; min-height: 500px; }
         .close-modal { position: fixed; top: 20px; right: 20px; background: #ff3333; color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-family: 'Orbitron', monospace; z-index: 2001; }
         .close-modal:hover { transform: scale(1.05); box-shadow: 0 0 15px red; }
+        /* Developer API specific styles */
+        .developer-card {
+            background: rgba(0, 0, 0, 0.9);
+            border: 2px solid magenta;
+            border-radius: 12px;
+            padding: 24px;
+            margin: 30px auto;
+        }
+        .api-keys-result {
+            background: #000;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            display: none;
+        }
+        .api-keys-result code {
+            display: block;
+            word-break: break-all;
+            font-family: monospace;
+            font-size: 12px;
+            background: #111;
+            padding: 8px;
+            border-radius: 4px;
+            margin-top: 5px;
+        }
     </style>
 </head>
 <body>
@@ -473,6 +498,119 @@
                     <span id="totalCount" class="font-bold" style="color: cyan;">0</span>
                 </div>
             </div>
+
+            <!-- ==================== DEVELOPER API SECTION ==================== -->
+            <div class="developer-card">
+                <div class="panel-header">
+                    <div class="panel-title">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="magenta" stroke-width="2">
+                            <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path>
+                        </svg>
+                        <h2 id="devApiTitle" style="color: magenta;">👨‍💻 DEVELOPER API</h2>
+                    </div>
+                    <div class="status-badge" style="border-color: magenta;">
+                        <span style="color: magenta;" id="devApiStatus">🟢 Available</span>
+                    </div>
+                </div>
+
+                <div class="metrics-grid">
+                    <div class="metric-card metric-card-purple">
+                        <div class="metric-header">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="magenta" stroke-width="2">
+                                <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                                <line x1="8" y1="21" x2="16" y2="21"></line>
+                                <line x1="12" y1="17" x2="12" y2="21"></line>
+                            </svg>
+                            <span id="devSdkTitle" style="color: magenta;">📦 SDK Installation</span>
+                        </div>
+                        <div style="background: rgba(0,0,0,0.5); padding: 15px; border-radius: 8px; margin-top: 10px;">
+                            <div style="color: #00ff66; margin-bottom: 10px;" id="devJsLabel">JavaScript / Node.js:</div>
+                            <code style="display: block; background: #000; padding: 10px; border-radius: 5px; font-size: 12px; word-break: break-all;">
+                                npm install bradicoin-sdk
+                            </code>
+                            <div style="color: #00ff66; margin: 15px 0 10px 0;" id="devPythonLabel">Python:</div>
+                            <code style="display: block; background: #000; padding: 10px; border-radius: 5px; font-size: 12px; word-break: break-all;">
+                                pip install bradicoin-sdk
+                            </code>
+                        </div>
+                    </div>
+
+                    <div class="metric-card metric-card-purple">
+                        <div class="metric-header">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="magenta" stroke-width="2">
+                                <path d="M4 4v16h16V4H4zm2 2h12v12H6V6z"></path>
+                                <path d="M8 8h8v8H8z"></path>
+                            </svg>
+                            <span id="devQuickStartTitle" style="color: magenta;">🚀 Quick Start</span>
+                        </div>
+                        <div style="background: rgba(0,0,0,0.5); padding: 15px; border-radius: 8px; margin-top: 10px;">
+                            <pre style="color: cyan; font-size: 11px; margin: 0; overflow-x: auto;">
+<span style="color: #ffc800;">// Initialize SDK</span>
+const Bradicoin = require('bradicoin-sdk');
+
+const client = new Bradicoin({
+    apiKey: 'your_api_key',
+    apiSecret: 'your_api_secret'
+});
+
+<span style="color: #ffc800;">// Create payment</span>
+const payment = await client.createPayment({
+    amount: 100,
+    toAddress: 'BRD-XXXX...',
+    callbackUrl: 'https://yoursite.com/webhook'
+});</pre>
+                        </div>
+                    </div>
+
+                    <div class="metric-card metric-card-purple">
+                        <div class="metric-header">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="magenta" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <path d="M12 6v6l4 2"></path>
+                            </svg>
+                            <span id="devEndpointsTitle" style="color: magenta;">⚡ API Endpoints</span>
+                        </div>
+                        <div style="background: rgba(0,0,0,0.5); padding: 15px; border-radius: 8px; margin-top: 10px;">
+                            <div class="metric-row"><span class="metric-label">POST</span><span class="metric-value" style="color: cyan;" id="devEndpoint1">/api/developer/create-payment</span></div>
+                            <div class="metric-row"><span class="metric-label">GET</span><span class="metric-value" style="color: cyan;" id="devEndpoint2">/api/developer/balance/:address</span></div>
+                            <div class="metric-row"><span class="metric-label">POST</span><span class="metric-value" style="color: cyan;" id="devEndpoint3">/api/developer/send</span></div>
+                            <div class="metric-row"><span class="metric-label">GET</span><span class="metric-value" style="color: cyan;" id="devEndpoint4">/api/developer/network</span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Register Form -->
+                <div style="margin-top: 20px; padding: 20px; background: rgba(255,0,255,0.1); border-radius: 12px;">
+                    <h3 id="devRegisterTitle" style="color: magenta; margin-bottom: 15px;">🔑 Get Your API Keys</h3>
+                    <div class="price-box" style="grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <div>
+                            <input type="text" id="devAppName" placeholder="Your App Name" style="width: 100%; padding: 12px; margin-bottom: 10px; background: #000; border: 1px solid magenta; color: cyan; border-radius: 5px;">
+                            <input type="email" id="devEmail" placeholder="Your Email (optional)" style="width: 100%; padding: 12px; margin-bottom: 10px; background: #000; border: 1px solid magenta; color: cyan; border-radius: 5px;">
+                            <input type="url" id="devWebhook" placeholder="Webhook URL (optional)" style="width: 100%; padding: 12px; background: #000; border: 1px solid magenta; color: cyan; border-radius: 5px;">
+                        </div>
+                        <div>
+                            <button onclick="registerDeveloperApp()" style="width: 100%; background: magenta; padding: 12px; border: none; border-radius: 5px; color: white; font-weight: bold; cursor: pointer;">
+                                🚀 Register Application
+                            </button>
+                            <div id="apiKeysResult" class="api-keys-result">
+                                <div style="color: #00ff66;" id="apiKeyLabel">API Key:</div>
+                                <code id="apiKeyDisplay"></code>
+                                <div style="color: #00ff66; margin-top: 10px;" id="apiSecretLabel">API Secret:</div>
+                                <code id="apiSecretDisplay"></code>
+                                <button onclick="copyApiKeys()" style="margin-top: 10px; background: cyan; color: #000; border: none; padding: 8px 16px; border-radius: 5px; cursor: pointer;">📋 Copy Keys</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Documentation Links -->
+                <div style="display: flex; flex-wrap: wrap; gap: 15px; margin-top: 20px; justify-content: center;">
+                    <a href="https://github.com/bicoin01/bradicoin-api/blob/main/developer-api.js" target="_blank" style="color: cyan;" id="devDocsLink">📚 API Documentation</a>
+                    <a href="#" style="color: cyan;" id="devNpmLink">📦 NPM Package</a>
+                    <a href="#" style="color: cyan;" id="devGithubLink">💻 GitHub SDK</a>
+                    <a href="https://bradicoin-api.onrender.com/api/developer/health" target="_blank" style="color: cyan;" id="devStatusLink">🩺 API Status</a>
+                </div>
+            </div>
         </div>
 
         <div id="featureModal" class="modal">
@@ -498,7 +636,7 @@
         const API_URL = 'https://bradicoin-api.onrender.com';
         let currentLang = 'en';
 
-        // COMPLETE TRANSLATIONS FOR ALL 4 LANGUAGES
+        // COMPLETE TRANSLATIONS FOR ALL 4 LANGUAGES (including Developer API)
         const translations = {
             en: {
                 pageTitle: "Bradicoin Blockchain",
@@ -563,6 +701,26 @@
                 labelBurnedToday: "Burned Today",
                 buybackActiveText: "Buyback Active",
                 yesStatus: "Yes",
+                // Developer API translations
+                devApiTitle: "👨‍💻 DEVELOPER API",
+                devApiStatus: "🟢 Available",
+                devSdkTitle: "📦 SDK Installation",
+                devJsLabel: "JavaScript / Node.js:",
+                devPythonLabel: "Python:",
+                devQuickStartTitle: "🚀 Quick Start",
+                devEndpointsTitle: "⚡ API Endpoints",
+                devEndpoint1: "/api/developer/create-payment",
+                devEndpoint2: "/api/developer/balance/:address",
+                devEndpoint3: "/api/developer/send",
+                devEndpoint4: "/api/developer/network",
+                devRegisterTitle: "🔑 Get Your API Keys",
+                apiKeyLabel: "API Key:",
+                apiSecretLabel: "API Secret:",
+                devDocsLink: "📚 API Documentation",
+                devNpmLink: "📦 NPM Package",
+                devGithubLink: "💻 GitHub SDK",
+                devStatusLink: "🩺 API Status",
+                // Navigation buttons (existing)
                 navTransactionHistory: "📜 Transaction History",
                 navSecurityDashboard: "🛡️ Security Dashboard",
                 navBlockExplorer: "📦 Block Explorer",
@@ -674,6 +832,26 @@
                 labelBurnedToday: "Queimado Hoje",
                 buybackActiveText: "Recompra Ativa",
                 yesStatus: "Sim",
+                // Developer API translations
+                devApiTitle: "👨‍💻 API PARA DESENVOLVEDORES",
+                devApiStatus: "🟢 Disponível",
+                devSdkTitle: "📦 Instalação do SDK",
+                devJsLabel: "JavaScript / Node.js:",
+                devPythonLabel: "Python:",
+                devQuickStartTitle: "🚀 Início Rápido",
+                devEndpointsTitle: "⚡ Endpoints da API",
+                devEndpoint1: "/api/developer/create-payment",
+                devEndpoint2: "/api/developer/balance/:address",
+                devEndpoint3: "/api/developer/send",
+                devEndpoint4: "/api/developer/network",
+                devRegisterTitle: "🔑 Obtenha Suas Chaves API",
+                apiKeyLabel: "Chave API:",
+                apiSecretLabel: "Segredo API:",
+                devDocsLink: "📚 Documentação da API",
+                devNpmLink: "📦 Pacote NPM",
+                devGithubLink: "💻 SDK no GitHub",
+                devStatusLink: "🩺 Status da API",
+                // Navigation buttons (existing)
                 navTransactionHistory: "📜 Histórico de Transações",
                 navSecurityDashboard: "🛡️ Painel de Segurança",
                 navBlockExplorer: "📦 Explorador de Blocos",
@@ -785,6 +963,26 @@
                 labelBurnedToday: "Quemado Hoy",
                 buybackActiveText: "Recompra Activa",
                 yesStatus: "Sí",
+                // Developer API translations
+                devApiTitle: "👨‍💻 API PARA DESARROLLADORES",
+                devApiStatus: "🟢 Disponible",
+                devSdkTitle: "📦 Instalación del SDK",
+                devJsLabel: "JavaScript / Node.js:",
+                devPythonLabel: "Python:",
+                devQuickStartTitle: "🚀 Inicio Rápido",
+                devEndpointsTitle: "⚡ Endpoints de la API",
+                devEndpoint1: "/api/developer/create-payment",
+                devEndpoint2: "/api/developer/balance/:address",
+                devEndpoint3: "/api/developer/send",
+                devEndpoint4: "/api/developer/network",
+                devRegisterTitle: "🔑 Obtenga Sus Claves API",
+                apiKeyLabel: "Clave API:",
+                apiSecretLabel: "Secreto API:",
+                devDocsLink: "📚 Documentación de la API",
+                devNpmLink: "📦 Paquete NPM",
+                devGithubLink: "💻 SDK en GitHub",
+                devStatusLink: "🩺 Estado de la API",
+                // Navigation buttons (existing)
                 navTransactionHistory: "📜 Historial de Transacciones",
                 navSecurityDashboard: "🛡️ Panel de Seguridad",
                 navBlockExplorer: "📦 Explorador de Bloques",
@@ -896,6 +1094,26 @@
                 labelBurnedToday: "تم حرقه اليوم",
                 buybackActiveText: "إعادة الشراء نشطة",
                 yesStatus: "نعم",
+                // Developer API translations
+                devApiTitle: "👨‍💻 واجهة برمجة التطبيقات للمطورين",
+                devApiStatus: "🟢 متاحة",
+                devSdkTitle: "📦 تثبيت SDK",
+                devJsLabel: "JavaScript / Node.js:",
+                devPythonLabel: "Python:",
+                devQuickStartTitle: "🚀 بداية سريعة",
+                devEndpointsTitle: "⚡ نقاط نهاية API",
+                devEndpoint1: "/api/developer/create-payment",
+                devEndpoint2: "/api/developer/balance/:address",
+                devEndpoint3: "/api/developer/send",
+                devEndpoint4: "/api/developer/network",
+                devRegisterTitle: "🔑 احصل على مفاتيح API الخاصة بك",
+                apiKeyLabel: "مفتاح API:",
+                apiSecretLabel: "سر API:",
+                devDocsLink: "📚 وثائق API",
+                devNpmLink: "📦 حزمة NPM",
+                devGithubLink: "💻 SDK على GitHub",
+                devStatusLink: "🩺 حالة API",
+                // Navigation buttons (existing)
                 navTransactionHistory: "📜 سجل المعاملات",
                 navSecurityDashboard: "🛡️ لوحة الأمان",
                 navBlockExplorer: "📦 مستكشف البلوكات",
@@ -1179,6 +1397,54 @@
             });
         }
 
+        // Developer API Functions
+        async function registerDeveloperApp() {
+            const appName = document.getElementById('devAppName').value;
+            const email = document.getElementById('devEmail').value;
+            const webhookUrl = document.getElementById('devWebhook').value;
+            
+            if (!appName) {
+                alert('Please enter your app name');
+                return;
+            }
+            
+            try {
+                const response = await fetch(`https://bradicoin-api.onrender.com/api/developer/register`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ appName, email, webhookUrl })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    document.getElementById('apiKeyDisplay').textContent = data.apiKey;
+                    document.getElementById('apiSecretDisplay').textContent = data.apiSecret;
+                    document.getElementById('apiKeysResult').style.display = 'block';
+                    
+                    // Store in session for demo
+                    sessionStorage.setItem('dev_api_key', data.apiKey);
+                    sessionStorage.setItem('dev_api_secret', data.apiSecret);
+                    
+                    alert('✅ API Keys generated successfully! Save them securely.');
+                } else {
+                    alert('Error: ' + (data.error || 'Registration failed'));
+                }
+            } catch (error) {
+                alert('Registration failed: ' + error.message);
+            }
+        }
+
+        function copyApiKeys() {
+            const apiKey = document.getElementById('apiKeyDisplay').textContent;
+            const apiSecret = document.getElementById('apiSecretDisplay').textContent;
+            const textToCopy = `API Key: ${apiKey}\nAPI Secret: ${apiSecret}`;
+            
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                alert('✅ API Keys copied to clipboard!');
+            });
+        }
+
         function updateLanguage() {
             const t = translations[currentLang];
             if (!t) return;
@@ -1211,6 +1477,26 @@
             document.getElementById('footerTerms').textContent = t.footerTerms;
             document.getElementById('footerPrivacy').textContent = t.footerPrivacy;
             document.getElementById('footerSupport').textContent = t.footerSupport;
+
+            // Developer API translations
+            document.getElementById('devApiTitle').textContent = t.devApiTitle;
+            document.getElementById('devApiStatus').textContent = t.devApiStatus;
+            document.getElementById('devSdkTitle').textContent = t.devSdkTitle;
+            document.getElementById('devJsLabel').textContent = t.devJsLabel;
+            document.getElementById('devPythonLabel').textContent = t.devPythonLabel;
+            document.getElementById('devQuickStartTitle').textContent = t.devQuickStartTitle;
+            document.getElementById('devEndpointsTitle').textContent = t.devEndpointsTitle;
+            document.getElementById('devEndpoint1').textContent = t.devEndpoint1;
+            document.getElementById('devEndpoint2').textContent = t.devEndpoint2;
+            document.getElementById('devEndpoint3').textContent = t.devEndpoint3;
+            document.getElementById('devEndpoint4').textContent = t.devEndpoint4;
+            document.getElementById('devRegisterTitle').textContent = t.devRegisterTitle;
+            document.getElementById('apiKeyLabel').textContent = t.apiKeyLabel;
+            document.getElementById('apiSecretLabel').textContent = t.apiSecretLabel;
+            document.getElementById('devDocsLink').textContent = t.devDocsLink;
+            document.getElementById('devNpmLink').textContent = t.devNpmLink;
+            document.getElementById('devGithubLink').textContent = t.devGithubLink;
+            document.getElementById('devStatusLink').textContent = t.devStatusLink;
 
             // Update metric labels
             const metricLabels = [
@@ -1357,6 +1643,8 @@
         init();
         window.copyToClipboard = copyToClipboard;
         window.closeModal = closeModal;
+        window.registerDeveloperApp = registerDeveloperApp;
+        window.copyApiKeys = copyApiKeys;
     </script>
 </body>
 </html>
