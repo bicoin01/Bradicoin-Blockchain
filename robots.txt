@@ -1,0 +1,4 @@
+# robots.txt for Bradicoin Blockchain
+User-agent: *
+Allow: /
+Sitemap: https://www.bradichain.com/sitemap.xml
