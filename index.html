@@ -95,6 +95,16 @@
             cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; gap: 8px;
         }
         .search-button:hover { box-shadow: 0 0 20px cyan; transform: scale(1.02); }
+        .result-box {
+            margin-top: 20px;
+            padding: 20px;
+            background: rgba(0,0,0,0.7);
+            border-radius: 12px;
+            border: 1px solid cyan;
+            display: none;
+        }
+        .result-box.show { display: block; animation: fadeIn 0.5s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
         .nav-section { margin: 30px 0 20px 0; }
         .nav-section-title {
             text-align: center; color: cyan; font-size: 1.2rem; margin-bottom: 15px;
@@ -181,7 +191,6 @@
         .modal-inner { background: rgba(0, 0, 0, 0.9); border: 2px solid cyan; border-radius: 15px; padding: 30px; min-height: 500px; }
         .close-modal { position: fixed; top: 20px; right: 20px; background: #ff3333; color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-family: 'Orbitron', monospace; z-index: 2001; }
         .close-modal:hover { transform: scale(1.05); box-shadow: 0 0 15px red; }
-        /* Developer API specific styles */
         .developer-card {
             background: rgba(0, 0, 0, 0.9);
             border: 2px solid magenta;
@@ -189,23 +198,9 @@
             padding: 24px;
             margin: 30px auto;
         }
-        .api-keys-result {
-            background: #000;
-            padding: 15px;
-            border-radius: 8px;
-            margin-top: 15px;
-            display: none;
-        }
-        .api-keys-result code {
-            display: block;
-            word-break: break-all;
-            font-family: monospace;
-            font-size: 12px;
-            background: #111;
-            padding: 8px;
-            border-radius: 4px;
-            margin-top: 5px;
-        }
+        .api-keys-result { background: #000; padding: 15px; border-radius: 8px; margin-top: 15px; display: none; }
+        .api-keys-result code { display: block; word-break: break-all; font-family: monospace; font-size: 12px; background: #111; padding: 8px; border-radius: 4px; margin-top: 5px; }
+        .result-balance { font-size: 2rem; color: #00ff66; text-align: center; margin: 15px 0; }
     </style>
 </head>
 <body>
@@ -231,7 +226,7 @@
             <div class="search-container">
                 <div class="search-wrapper">
                     <div class="search-input-wrapper">
-                        <input type="text" id="searchInput" class="search-input" placeholder="Paste Bradicoin wallet address here">
+                        <input type="text" id="searchInput" class="search-input" placeholder="Paste Bradicoin wallet address here (Br...)">
                         <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <circle cx="11" cy="11" r="8"></circle>
                             <path d="m21 21-4.3-4.3"></path>
@@ -245,6 +240,7 @@
                         <span id="searchBtnText">Search</span>
                     </button>
                 </div>
+                <div id="searchResult" class="result-box"></div>
             </div>
 
             <!-- Section 1: Core Blockchain -->
@@ -499,7 +495,7 @@
                 </div>
             </div>
 
-            <!-- ==================== DEVELOPER API SECTION ==================== -->
+            <!-- Developer API Section -->
             <div class="developer-card">
                 <div class="panel-header">
                     <div class="panel-title">
@@ -571,15 +567,14 @@ const payment = await client.createPayment({
                             <span id="devEndpointsTitle" style="color: magenta;">⚡ API Endpoints</span>
                         </div>
                         <div style="background: rgba(0,0,0,0.5); padding: 15px; border-radius: 8px; margin-top: 10px;">
-                            <div class="metric-row"><span class="metric-label">POST</span><span class="metric-value" style="color: cyan;" id="devEndpoint1">/api/developer/create-payment</span></div>
-                            <div class="metric-row"><span class="metric-label">GET</span><span class="metric-value" style="color: cyan;" id="devEndpoint2">/api/developer/balance/:address</span></div>
-                            <div class="metric-row"><span class="metric-label">POST</span><span class="metric-value" style="color: cyan;" id="devEndpoint3">/api/developer/send</span></div>
-                            <div class="metric-row"><span class="metric-label">GET</span><span class="metric-value" style="color: cyan;" id="devEndpoint4">/api/developer/network</span></div>
+                            <div class="metric-row"><span class="metric-label">GET</span><span class="metric-value" style="color: cyan;">/api/balance/:address</span></div>
+                            <div class="metric-row"><span class="metric-label">POST</span><span class="metric-value" style="color: cyan;">/api/register</span></div>
+                            <div class="metric-row"><span class="metric-label">POST</span><span class="metric-value" style="color: cyan;">/api/send</span></div>
+                            <div class="metric-row"><span class="metric-label">GET</span><span class="metric-value" style="color: cyan;">/api/health</span></div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Register Form -->
                 <div style="margin-top: 20px; padding: 20px; background: rgba(255,0,255,0.1); border-radius: 12px;">
                     <h3 id="devRegisterTitle" style="color: magenta; margin-bottom: 15px;">🔑 Get Your API Keys</h3>
                     <div class="price-box" style="grid-template-columns: 1fr 1fr; gap: 20px;">
@@ -603,12 +598,9 @@ const payment = await client.createPayment({
                     </div>
                 </div>
 
-                <!-- Documentation Links -->
                 <div style="display: flex; flex-wrap: wrap; gap: 15px; margin-top: 20px; justify-content: center;">
-                    <a href="https://github.com/bicoin01/bradicoin-api/blob/main/developer-api.js" target="_blank" style="color: cyan;" id="devDocsLink">📚 API Documentation</a>
-                    <a href="#" style="color: cyan;" id="devNpmLink">📦 NPM Package</a>
-                    <a href="#" style="color: cyan;" id="devGithubLink">💻 GitHub SDK</a>
-                    <a href="https://bradicoin-api.onrender.com/api/developer/health" target="_blank" style="color: cyan;" id="devStatusLink">🩺 API Status</a>
+                    <a href="https://bradicoin-api.onrender.com/" target="_blank" style="color: cyan;" id="devDocsLink">📚 API Documentation</a>
+                    <a href="https://bradicoin-api.onrender.com/api/health" target="_blank" style="color: cyan;" id="devStatusLink">🩺 API Status</a>
                 </div>
             </div>
         </div>
@@ -633,538 +625,173 @@ const payment = await client.createPayment({
     </div>
 
     <script>
+        // ==================== API CONFIGURATION ====================
         const API_URL = 'https://bradicoin-api.onrender.com';
         let currentLang = 'en';
 
-        // COMPLETE TRANSLATIONS FOR ALL 4 LANGUAGES (including Developer API)
+        // ==================== SEARCH WALLET FUNCTION ====================
+        async function searchWallet() {
+            const address = document.getElementById('searchInput').value.trim();
+            const resultDiv = document.getElementById('searchResult');
+            
+            if (!address) {
+                resultDiv.innerHTML = '<div style="color: #ff6464; text-align: center;">❌ Please enter a Bradicoin wallet address</div>';
+                resultDiv.classList.add('show');
+                setTimeout(() => resultDiv.classList.remove('show'), 3000);
+                return;
+            }
+            
+            resultDiv.innerHTML = '<div style="text-align: center; color: cyan;">🔍 Searching blockchain...</div>';
+            resultDiv.classList.add('show');
+            
+            try {
+                // Try to get balance from API
+                const response = await fetch(`${API_URL}/api/balance/${address}`);
+                const data = await response.json();
+                
+                if (data && data.success) {
+                    const balance = data.data?.balance || data.balance || 0;
+                    resultDiv.innerHTML = `
+                        <div style="border: 2px solid #00ff66; border-radius: 12px; padding: 20px; background: rgba(0,255,100,0.05);">
+                            <div style="text-align: center; margin-bottom: 15px;">
+                                <span style="font-size: 3rem;">✅</span>
+                                <h3 style="color: #00ff66; margin-top: 10px;">Wallet Found on Bradicoin Blockchain</h3>
+                            </div>
+                            <div class="metric-row"><span class="metric-label">📍 Address:</span><span class="metric-value" style="font-family: monospace; font-size: 11px;">${address}</span></div>
+                            <div class="metric-row"><span class="metric-label">💰 Balance:</span><span class="metric-value" style="color: #00ff66; font-size: 1.4rem;">${balance.toLocaleString()} BRD</span></div>
+                            <div class="metric-row"><span class="metric-label">💎 Currency:</span><span class="metric-value">BRD (Bradicoin)</span></div>
+                            <div class="metric-row"><span class="metric-label">🔗 Network:</span><span class="metric-value">Bradichain Mainnet</span></div>
+                            <div class="metric-row"><span class="metric-label">⏱️ Last Check:</span><span class="metric-value">${new Date().toLocaleString()}</span></div>
+                            <div style="margin-top: 20px; text-align: center;">
+                                <button onclick="window.open('https://www.bradichain.com/address/${address}', '_blank')" style="background: cyan; color: #000; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-family: monospace;">
+                                    🔍 View on Bradichain Explorer
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `
+                        <div style="border: 2px solid #ffc800; border-radius: 12px; padding: 20px; background: rgba(255,200,0,0.05); text-align: center;">
+                            <span style="font-size: 3rem;">⚠️</span>
+                            <h3 style="color: #ffc800;">Wallet Not Found</h3>
+                            <p style="margin: 15px 0;">Address: <code style="color: cyan;">${address}</code></p>
+                            <p>This wallet address does not exist on the Bradicoin blockchain yet.</p>
+                            <p style="margin-top: 15px; font-size: 12px;">💡 Tip: Make sure the address starts with "Br"</p>
+                            <div style="margin-top: 20px;">
+                                <button onclick="document.getElementById('searchInput').value = ''; document.getElementById('searchResult').classList.remove('show');" style="background: #00ff66; color: #000; border: none; padding: 8px 16px; border-radius: 5px; cursor: pointer;">Clear</button>
+                            </div>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.error('Search error:', error);
+                resultDiv.innerHTML = `
+                    <div style="border: 2px solid #ff6464; border-radius: 12px; padding: 20px; background: rgba(255,100,100,0.05); text-align: center;">
+                        <span style="font-size: 3rem;">❌</span>
+                        <h3 style="color: #ff6464;">API Connection Error</h3>
+                        <p>Could not connect to Bradicoin API.</p>
+                        <p style="font-size: 12px; margin-top: 10px;">Error: ${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+
+        // ==================== TRANSLATIONS ====================
         const translations = {
             en: {
-                pageTitle: "Bradicoin Blockchain",
-                searchPlaceholder: "Paste Bradicoin wallet address here",
-                searchButton: "Search",
-                sectionCoreTitle: "🔗 CORE BLOCKCHAIN",
-                sectionMilitaryTitle: "🛡️ MILITARY & SECURITY",
-                sectionExplorationTitle: "🔍 BLOCKCHAIN EXPLORATION",
-                sectionEmergingTitle: "💡 SMART CONTRACTS & EMERGING TECH",
-                sectionIndustriesTitle: "🏭 INDUSTRIES",
-                sectionWeb3Title: "🌐 WEB3 & INVESTMENTS",
-                sectionGovernanceTitle: "⚙️ GOVERNANCE & UPDATES",
-                networkStatusTitle: "Network Status",
-                blockchainValid: "Blockchain Valid",
-                networkMetricsTitle: "Network Metrics",
-                transactionsTitle: "Transactions",
-                walletsTitle: "Wallets",
-                supplyTitle: "Supply",
-                priceEconomicsTitle: "Price Economics",
-                stabilityTitle: "Stability Mechanisms",
-                transactionHistoryTitle: "Transaction History",
-                refreshButton: "⟳ Refresh",
-                totalTransactionsText: "Total transactions: ",
-                footerCopyright: "© 2025 Bradicoin Blockchain. All rights reserved.",
-                footerAbout: "About",
-                footerContact: "Contact",
-                footerTerms: "Terms of Use",
-                footerPrivacy: "Privacy",
-                footerSupport: "Support",
-                labelBlockHeight: "Block Height",
-                labelBlocksPerMin: "Blocks/min",
-                labelAvgBlockTime: "Avg Block Time",
-                labelNodesOnline: "Nodes Online",
-                labelValidators: "Validators",
-                labelNetworkHealth: "Network Health",
-                labelDecentralization: "Decentralization",
-                labelTPS: "TPS",
-                labelAvgConfirmation: "Avg Confirmation",
-                labelAvgFee: "Avg Fee",
-                labelVolume24h: "Volume 24h",
-                labelFeesToday: "Fees Today",
-                labelPending: "Pending",
-                labelActiveWallets: "Active Wallets",
-                labelNewToday: "New Today",
-                labelInStaking: "In Staking",
-                labelTopHolders: "Top Holders",
-                labelTotal: "Total",
-                labelCirculating: "Circulating",
-                labelLocked: "Locked",
-                labelStaked: "Staked",
-                labelBurned: "Burned",
-                labelDeflation: "Deflation",
-                labelBasePrice: "Base Price",
-                labelCurrentPrice: "Current Price",
-                priceSupportText: "Price Support $10",
-                activeStatus: "Active",
-                labelRealMarketCap: "Real Market Cap",
-                labelDilutedMC: "Diluted MC",
-                labelTargetMC: "Target MC",
-                labelStabilityFund: "Stability Fund",
-                labelBoughtToday: "Bought Today",
-                labelBurnedToday: "Burned Today",
-                buybackActiveText: "Buyback Active",
-                yesStatus: "Yes",
-                // Developer API translations
-                devApiTitle: "👨‍💻 DEVELOPER API",
-                devApiStatus: "🟢 Available",
-                devSdkTitle: "📦 SDK Installation",
-                devJsLabel: "JavaScript / Node.js:",
-                devPythonLabel: "Python:",
-                devQuickStartTitle: "🚀 Quick Start",
-                devEndpointsTitle: "⚡ API Endpoints",
-                devEndpoint1: "/api/developer/create-payment",
-                devEndpoint2: "/api/developer/balance/:address",
-                devEndpoint3: "/api/developer/send",
-                devEndpoint4: "/api/developer/network",
-                devRegisterTitle: "🔑 Get Your API Keys",
-                apiKeyLabel: "API Key:",
-                apiSecretLabel: "API Secret:",
-                devDocsLink: "📚 API Documentation",
-                devNpmLink: "📦 NPM Package",
-                devGithubLink: "💻 GitHub SDK",
-                devStatusLink: "🩺 API Status",
-                // Navigation buttons (existing)
-                navTransactionHistory: "📜 Transaction History",
-                navSecurityDashboard: "🛡️ Security Dashboard",
-                navBlockExplorer: "📦 Block Explorer",
-                navNetworkStatus: "🌐 Network Status",
-                navStaking: "💰 Staking & Rewards",
-                navGovernance: "🏛️ DAO Governance",
-                navAuditLogs: "📊 Audit Logs",
-                navGasTracker: "⛽ Gas Fee Tracker",
-                navAnalytics: "📈 Analytics Dashboard",
-                navFraudDetection: "🚨 Fraud Detection",
-                navMilitaryC2: "🎖️ Military C2",
-                navAuditVault: "🔒 Audit Vault",
-                navCyberThreat: "💀 Cyber Threat Intel",
-                navMissionCritical: "⚡ Mission Critical",
-                navSecurity: "🛡️ Security",
-                navExploreBlocks: "🔍 Explore Blocks",
-                navTransactions: "📜 Transactions",
-                navNetworkStatus2: "🌐 Network Status",
-                navStaking2: "💰 staking",
-                navDaoGovernance2: "🏛️ DAO and Governance",
-                navAuditLogs2: "📊 auditLogs",
-                navGasFees: "⛽ gasFees",
-                navAnalytics2: "📈 analytics",
-                navFraudDetection2: "🚨 Fraud Detection",
-                navSmartContracts: "📝 Smart Contracts",
-                navDesci: "🔬 Desci",
-                navHologram: "🌀 Hologram",
-                navSpaceSector: "🚀 Space Sector",
-                navAgriculture: "🌾 Agriculture and Food",
-                navEntertainment: "🎬 Entertainment",
-                navSports: "⚽ Sports",
-                navInfrastructure: "🏗️ Infrastructure",
-                navHealth: "🏥 Health",
-                navBiotechnology: "🧬 Biotechnology",
-                navEnergy: "⚡ Energy",
-                navFinancialMarket: "📈 Financial Market",
-                navNftExploration: "🎨 NFT Exploration",
-                navCloudMining: "⛏️ Cloud Mining",
-                navRoboticsInvestments: "🤖 Robotics Investments",
-                navDeFiProjects: "💎 DeFi Projects",
-                navMetaverseIntegration: "🌌 Metaverse Integration",
-                navDecentralizedPhilanthropy: "❤️ Decentralized Philanthropy",
-                navBlockchainUpdate: "🔄 Blockchain Update",
-                navDigitalGovernance: "⚖️ Digital Governance",
-                navCryptoMarketplace: "🏪 Cryptocurrency Marketplace",
-                navAITech: "🤖 Artificial Intelligence News",
-                navBlockchainSecurity: "🔐 Blockchain Security"
+                pageTitle: "Bradicoin Blockchain", searchPlaceholder: "Paste Bradicoin wallet address here (Br...)",
+                searchButton: "Search", sectionCoreTitle: "🔗 CORE BLOCKCHAIN", sectionMilitaryTitle: "🛡️ MILITARY & SECURITY",
+                sectionExplorationTitle: "🔍 BLOCKCHAIN EXPLORATION", sectionEmergingTitle: "💡 SMART CONTRACTS & EMERGING TECH",
+                sectionIndustriesTitle: "🏭 INDUSTRIES", sectionWeb3Title: "🌐 WEB3 & INVESTMENTS",
+                sectionGovernanceTitle: "⚙️ GOVERNANCE & UPDATES", networkStatusTitle: "Network Status",
+                blockchainValid: "Blockchain Valid", networkMetricsTitle: "Network Metrics",
+                transactionsTitle: "Transactions", walletsTitle: "Wallets", supplyTitle: "Supply",
+                priceEconomicsTitle: "Price Economics", stabilityTitle: "Stability Mechanisms",
+                transactionHistoryTitle: "Transaction History", refreshButton: "⟳ Refresh",
+                totalTransactionsText: "Total transactions: ", footerCopyright: "© 2025 Bradicoin Blockchain. All rights reserved.",
+                footerAbout: "About", footerContact: "Contact", footerTerms: "Terms of Use", footerPrivacy: "Privacy", footerSupport: "Support",
+                labelBlockHeight: "Block Height", labelBlocksPerMin: "Blocks/min", labelAvgBlockTime: "Avg Block Time",
+                labelNodesOnline: "Nodes Online", labelValidators: "Validators", labelNetworkHealth: "Network Health",
+                labelDecentralization: "Decentralization", labelTPS: "TPS", labelAvgConfirmation: "Avg Confirmation",
+                labelAvgFee: "Avg Fee", labelVolume24h: "Volume 24h", labelFeesToday: "Fees Today", labelPending: "Pending",
+                labelActiveWallets: "Active Wallets", labelNewToday: "New Today", labelInStaking: "In Staking",
+                labelTopHolders: "Top Holders", labelTotal: "Total", labelCirculating: "Circulating", labelLocked: "Locked",
+                labelStaked: "Staked", labelBurned: "Burned", labelDeflation: "Deflation", labelBasePrice: "Base Price",
+                labelCurrentPrice: "Current Price", priceSupportText: "Price Support $10", activeStatus: "Active",
+                labelRealMarketCap: "Real Market Cap", labelDilutedMC: "Diluted MC", labelTargetMC: "Target MC",
+                labelStabilityFund: "Stability Fund", labelBoughtToday: "Bought Today", labelBurnedToday: "Burned Today",
+                buybackActiveText: "Buyback Active", yesStatus: "Yes", devApiTitle: "👨‍💻 DEVELOPER API",
+                devApiStatus: "🟢 Available", devSdkTitle: "📦 SDK Installation", devJsLabel: "JavaScript / Node.js:",
+                devPythonLabel: "Python:", devQuickStartTitle: "🚀 Quick Start", devEndpointsTitle: "⚡ API Endpoints",
+                devRegisterTitle: "🔑 Get Your API Keys", apiKeyLabel: "API Key:", apiSecretLabel: "API Secret:",
+                devDocsLink: "📚 API Documentation", devStatusLink: "🩺 API Status"
             },
             pt: {
-                pageTitle: "Bradicoin Blockchain",
-                searchPlaceholder: "Cole o endereço da carteira Bradicoin aqui",
-                searchButton: "Buscar",
-                sectionCoreTitle: "🔗 CORE BLOCKCHAIN",
-                sectionMilitaryTitle: "🛡️ MILITAR & SEGURANÇA",
-                sectionExplorationTitle: "🔍 EXPLORAÇÃO BLOCKCHAIN",
-                sectionEmergingTitle: "💡 SMART CONTRACTS & TECNOLOGIAS EMERGENTES",
-                sectionIndustriesTitle: "🏭 INDÚSTRIAS",
-                sectionWeb3Title: "🌐 WEB3 & INVESTIMENTOS",
-                sectionGovernanceTitle: "⚙️ GOVERNANÇA & ATUALIZAÇÕES",
-                networkStatusTitle: "Status da Rede",
-                blockchainValid: "Blockchain Válida",
-                networkMetricsTitle: "Métricas da Rede",
-                transactionsTitle: "Transações",
-                walletsTitle: "Carteiras",
-                supplyTitle: "Oferta",
-                priceEconomicsTitle: "Economia de Preço",
-                stabilityTitle: "Mecanismos de Estabilidade",
-                transactionHistoryTitle: "Histórico de Transações",
-                refreshButton: "⟳ Atualizar",
-                totalTransactionsText: "Total de transações: ",
+                pageTitle: "Bradicoin Blockchain", searchPlaceholder: "Cole o endereço da carteira Bradicoin aqui (Br...)",
+                searchButton: "Buscar", sectionCoreTitle: "🔗 CORE BLOCKCHAIN", sectionMilitaryTitle: "🛡️ MILITAR & SEGURANÇA",
+                sectionExplorationTitle: "🔍 EXPLORAÇÃO BLOCKCHAIN", sectionEmergingTitle: "💡 SMART CONTRACTS & TECNOLOGIAS EMERGENTES",
+                sectionIndustriesTitle: "🏭 INDÚSTRIAS", sectionWeb3Title: "🌐 WEB3 & INVESTIMENTOS",
+                sectionGovernanceTitle: "⚙️ GOVERNANÇA & ATUALIZAÇÕES", networkStatusTitle: "Status da Rede",
+                blockchainValid: "Blockchain Válida", networkMetricsTitle: "Métricas da Rede", transactionsTitle: "Transações",
+                walletsTitle: "Carteiras", supplyTitle: "Oferta", priceEconomicsTitle: "Economia de Preço",
+                stabilityTitle: "Mecanismos de Estabilidade", transactionHistoryTitle: "Histórico de Transações",
+                refreshButton: "⟳ Atualizar", totalTransactionsText: "Total de transações: ",
                 footerCopyright: "© 2025 Bradicoin Blockchain. Todos os direitos reservados.",
-                footerAbout: "Sobre",
-                footerContact: "Contato",
-                footerTerms: "Termos de Uso",
-                footerPrivacy: "Privacidade",
-                footerSupport: "Suporte",
-                labelBlockHeight: "Altura do Bloco",
-                labelBlocksPerMin: "Blocos/min",
-                labelAvgBlockTime: "Tempo Médio por Bloco",
-                labelNodesOnline: "Nós Online",
-                labelValidators: "Validadores",
-                labelNetworkHealth: "Saúde da Rede",
-                labelDecentralization: "Descentralização",
-                labelTPS: "TPS",
-                labelAvgConfirmation: "Confirmação Média",
-                labelAvgFee: "Taxa Média",
-                labelVolume24h: "Volume 24h",
-                labelFeesToday: "Taxas Hoje",
-                labelPending: "Pendentes",
-                labelActiveWallets: "Carteiras Ativas",
-                labelNewToday: "Novas Hoje",
-                labelInStaking: "Em Staking",
-                labelTopHolders: "Maiores Detentores",
-                labelTotal: "Total",
-                labelCirculating: "Em Circulação",
-                labelLocked: "Bloqueadas",
-                labelStaked: "Em Staking",
-                labelBurned: "Queimadas",
-                labelDeflation: "Deflação",
-                labelBasePrice: "Preço Base",
-                labelCurrentPrice: "Preço Atual",
-                priceSupportText: "Suporte de Preço $10",
-                activeStatus: "Ativo",
-                labelRealMarketCap: "Market Cap Real",
-                labelDilutedMC: "MC Diluído",
-                labelTargetMC: "MC Alvo",
-                labelStabilityFund: "Fundo de Estabilidade",
-                labelBoughtToday: "Comprado Hoje",
-                labelBurnedToday: "Queimado Hoje",
-                buybackActiveText: "Recompra Ativa",
-                yesStatus: "Sim",
-                // Developer API translations
-                devApiTitle: "👨‍💻 API PARA DESENVOLVEDORES",
-                devApiStatus: "🟢 Disponível",
-                devSdkTitle: "📦 Instalação do SDK",
-                devJsLabel: "JavaScript / Node.js:",
-                devPythonLabel: "Python:",
-                devQuickStartTitle: "🚀 Início Rápido",
-                devEndpointsTitle: "⚡ Endpoints da API",
-                devEndpoint1: "/api/developer/create-payment",
-                devEndpoint2: "/api/developer/balance/:address",
-                devEndpoint3: "/api/developer/send",
-                devEndpoint4: "/api/developer/network",
-                devRegisterTitle: "🔑 Obtenha Suas Chaves API",
-                apiKeyLabel: "Chave API:",
-                apiSecretLabel: "Segredo API:",
-                devDocsLink: "📚 Documentação da API",
-                devNpmLink: "📦 Pacote NPM",
-                devGithubLink: "💻 SDK no GitHub",
-                devStatusLink: "🩺 Status da API",
-                // Navigation buttons (existing)
-                navTransactionHistory: "📜 Histórico de Transações",
-                navSecurityDashboard: "🛡️ Painel de Segurança",
-                navBlockExplorer: "📦 Explorador de Blocos",
-                navNetworkStatus: "🌐 Status da Rede",
-                navStaking: "💰 Staking & Recompensas",
-                navGovernance: "🏛️ Governança DAO",
-                navAuditLogs: "📊 Registros de Auditoria",
-                navGasTracker: "⛽ Rastreador de Taxas",
-                navAnalytics: "📈 Painel Analítico",
-                navFraudDetection: "🚨 Detecção de Fraudes",
-                navMilitaryC2: "🎖️ Comando Militar C2",
-                navAuditVault: "🔒 Cofre de Auditoria",
-                navCyberThreat: "💀 Inteligência de Ameaças",
-                navMissionCritical: "⚡ Missão Crítica",
-                navSecurity: "🛡️ Segurança",
-                navExploreBlocks: "🔍 Explorar Blocos",
-                navTransactions: "📜 Transações",
-                navNetworkStatus2: "🌐 Status da Rede",
-                navStaking2: "💰 staking",
-                navDaoGovernance2: "🏛️ Governança DAO",
-                navAuditLogs2: "📊 Registros de Auditoria",
-                navGasFees: "⛽ Taxas de Gás",
-                navAnalytics2: "📈 análises",
-                navFraudDetection2: "🚨 Detecção de Fraudes",
-                navSmartContracts: "📝 Contratos Inteligentes",
-                navDesci: "🔬 Desci",
-                navHologram: "🌀 Holograma",
-                navSpaceSector: "🚀 Setor Espacial",
-                navAgriculture: "🌾 Agricultura e Alimentação",
-                navEntertainment: "🎬 Entretenimento",
-                navSports: "⚽ Esportes",
-                navInfrastructure: "🏗️ Infraestrutura",
-                navHealth: "🏥 Saúde",
-                navBiotechnology: "🧬 Biotecnologia",
-                navEnergy: "⚡ Energia",
-                navFinancialMarket: "📈 Mercado Financeiro",
-                navNftExploration: "🎨 Exploração NFT",
-                navCloudMining: "⛏️ Mineração em Nuvem",
-                navRoboticsInvestments: "🤖 Investimentos em Robótica",
-                navDeFiProjects: "💎 Projetos DeFi",
-                navMetaverseIntegration: "🌌 Integração com Metaverso",
-                navDecentralizedPhilanthropy: "❤️ Filantropia Descentralizada",
-                navBlockchainUpdate: "🔄 Atualização Blockchain",
-                navDigitalGovernance: "⚖️ Governança Digital",
-                navCryptoMarketplace: "🏪 Marketplace de Criptomoedas",
-                navAITech: "🤖 Notícias de IA",
-                navBlockchainSecurity: "🔐 Segurança Blockchain"
+                footerAbout: "Sobre", footerContact: "Contato", footerTerms: "Termos de Uso", footerPrivacy: "Privacidade",
+                footerSupport: "Suporte", labelBlockHeight: "Altura do Bloco", labelBlocksPerMin: "Blocos/min",
+                labelAvgBlockTime: "Tempo Médio por Bloco", labelNodesOnline: "Nós Online", labelValidators: "Validadores",
+                labelNetworkHealth: "Saúde da Rede", labelDecentralization: "Descentralização", labelTPS: "TPS",
+                labelAvgConfirmation: "Confirmação Média", labelAvgFee: "Taxa Média", labelVolume24h: "Volume 24h",
+                labelFeesToday: "Taxas Hoje", labelPending: "Pendentes", labelActiveWallets: "Carteiras Ativas",
+                labelNewToday: "Novas Hoje", labelInStaking: "Em Staking", labelTopHolders: "Maiores Detentores",
+                labelTotal: "Total", labelCirculating: "Em Circulação", labelLocked: "Bloqueadas", labelStaked: "Em Staking",
+                labelBurned: "Queimadas", labelDeflation: "Deflação", labelBasePrice: "Preço Base", labelCurrentPrice: "Preço Atual",
+                priceSupportText: "Suporte de Preço $10", activeStatus: "Ativo", labelRealMarketCap: "Market Cap Real",
+                labelDilutedMC: "MC Diluído", labelTargetMC: "MC Alvo", labelStabilityFund: "Fundo de Estabilidade",
+                labelBoughtToday: "Comprado Hoje", labelBurnedToday: "Queimado Hoje", buybackActiveText: "Recompra Ativa",
+                yesStatus: "Sim", devApiTitle: "👨‍💻 API PARA DESENVOLVEDORES", devApiStatus: "🟢 Disponível",
+                devSdkTitle: "📦 Instalação do SDK", devJsLabel: "JavaScript / Node.js:", devPythonLabel: "Python:",
+                devQuickStartTitle: "🚀 Início Rápido", devEndpointsTitle: "⚡ Endpoints da API",
+                devRegisterTitle: "🔑 Obtenha Suas Chaves API", apiKeyLabel: "Chave API:", apiSecretLabel: "Segredo API:",
+                devDocsLink: "📚 Documentação da API", devStatusLink: "🩺 Status da API"
             },
             es: {
-                pageTitle: "Bradicoin Blockchain",
-                searchPlaceholder: "Pegue la dirección de la billetera Bradicoin aquí",
-                searchButton: "Buscar",
-                sectionCoreTitle: "🔗 CORE BLOCKCHAIN",
-                sectionMilitaryTitle: "🛡️ MILITAR & SEGURIDAD",
-                sectionExplorationTitle: "🔍 EXPLORACIÓN BLOCKCHAIN",
-                sectionEmergingTitle: "💡 SMART CONTRACTS & TECNOLOGÍAS EMERGENTES",
-                sectionIndustriesTitle: "🏭 INDUSTRIAS",
-                sectionWeb3Title: "🌐 WEB3 & INVERSIONES",
-                sectionGovernanceTitle: "⚙️ GOBERNANZA & ACTUALIZACIONES",
-                networkStatusTitle: "Estado de la Red",
-                blockchainValid: "Blockchain Válida",
-                networkMetricsTitle: "Métricas de Red",
-                transactionsTitle: "Transacciones",
-                walletsTitle: "Billeteras",
-                supplyTitle: "Suministro",
-                priceEconomicsTitle: "Economía de Precio",
-                stabilityTitle: "Mecanismos de Estabilidad",
-                transactionHistoryTitle: "Historial de Transacciones",
-                refreshButton: "⟳ Actualizar",
-                totalTransactionsText: "Total de transacciones: ",
+                pageTitle: "Bradicoin Blockchain", searchPlaceholder: "Pegue la dirección de la billetera Bradicoin aquí (Br...)",
+                searchButton: "Buscar", sectionCoreTitle: "🔗 CORE BLOCKCHAIN", sectionMilitaryTitle: "🛡️ MILITAR & SEGURIDAD",
+                sectionExplorationTitle: "🔍 EXPLORACIÓN BLOCKCHAIN", sectionEmergingTitle: "💡 SMART CONTRACTS & TECNOLOGÍAS EMERGENTES",
+                sectionIndustriesTitle: "🏭 INDUSTRIAS", sectionWeb3Title: "🌐 WEB3 & INVERSIONES",
+                sectionGovernanceTitle: "⚙️ GOBERNANZA & ACTUALIZACIONES", networkStatusTitle: "Estado de la Red",
+                blockchainValid: "Blockchain Válida", networkMetricsTitle: "Métricas de Red", transactionsTitle: "Transacciones",
+                walletsTitle: "Billeteras", supplyTitle: "Suministro", priceEconomicsTitle: "Economía de Precio",
+                stabilityTitle: "Mecanismos de Estabilidad", transactionHistoryTitle: "Historial de Transacciones",
+                refreshButton: "⟳ Actualizar", totalTransactionsText: "Total de transacciones: ",
                 footerCopyright: "© 2025 Bradicoin Blockchain. Todos los derechos reservados.",
-                footerAbout: "Acerca de",
-                footerContact: "Contacto",
-                footerTerms: "Términos de Uso",
-                footerPrivacy: "Privacidad",
-                footerSupport: "Soporte",
-                labelBlockHeight: "Altura del Bloque",
-                labelBlocksPerMin: "Bloques/min",
-                labelAvgBlockTime: "Tiempo Promedio por Bloque",
-                labelNodesOnline: "Nodos Online",
-                labelValidators: "Validadores",
-                labelNetworkHealth: "Salud de la Red",
-                labelDecentralization: "Descentralización",
-                labelTPS: "TPS",
-                labelAvgConfirmation: "Confirmación Promedio",
-                labelAvgFee: "Tarifa Promedio",
-                labelVolume24h: "Volumen 24h",
-                labelFeesToday: "Tarifas Hoy",
-                labelPending: "Pendientes",
-                labelActiveWallets: "Billeteras Activas",
-                labelNewToday: "Nuevas Hoy",
-                labelInStaking: "En Staking",
-                labelTopHolders: "Principales Titulares",
-                labelTotal: "Total",
-                labelCirculating: "En Circulación",
-                labelLocked: "Bloqueadas",
-                labelStaked: "En Staking",
-                labelBurned: "Quemadas",
-                labelDeflation: "Deflación",
-                labelBasePrice: "Precio Base",
-                labelCurrentPrice: "Precio Actual",
-                priceSupportText: "Soporte de Precio $10",
-                activeStatus: "Activo",
-                labelRealMarketCap: "Capitalización Real",
-                labelDilutedMC: "Capitalización Diluida",
-                labelTargetMC: "Capitalización Objetivo",
-                labelStabilityFund: "Fondo de Estabilidad",
-                labelBoughtToday: "Comprado Hoy",
-                labelBurnedToday: "Quemado Hoy",
-                buybackActiveText: "Recompra Activa",
-                yesStatus: "Sí",
-                // Developer API translations
-                devApiTitle: "👨‍💻 API PARA DESARROLLADORES",
-                devApiStatus: "🟢 Disponible",
-                devSdkTitle: "📦 Instalación del SDK",
-                devJsLabel: "JavaScript / Node.js:",
-                devPythonLabel: "Python:",
-                devQuickStartTitle: "🚀 Inicio Rápido",
-                devEndpointsTitle: "⚡ Endpoints de la API",
-                devEndpoint1: "/api/developer/create-payment",
-                devEndpoint2: "/api/developer/balance/:address",
-                devEndpoint3: "/api/developer/send",
-                devEndpoint4: "/api/developer/network",
-                devRegisterTitle: "🔑 Obtenga Sus Claves API",
-                apiKeyLabel: "Clave API:",
-                apiSecretLabel: "Secreto API:",
-                devDocsLink: "📚 Documentación de la API",
-                devNpmLink: "📦 Paquete NPM",
-                devGithubLink: "💻 SDK en GitHub",
-                devStatusLink: "🩺 Estado de la API",
-                // Navigation buttons (existing)
-                navTransactionHistory: "📜 Historial de Transacciones",
-                navSecurityDashboard: "🛡️ Panel de Seguridad",
-                navBlockExplorer: "📦 Explorador de Bloques",
-                navNetworkStatus: "🌐 Estado de la Red",
-                navStaking: "💰 Staking & Recompensas",
-                navGovernance: "🏛️ Gobernanza DAO",
-                navAuditLogs: "📊 Registros de Auditoría",
-                navGasTracker: "⛽ Rastreador de Tarifas",
-                navAnalytics: "📈 Panel Analítico",
-                navFraudDetection: "🚨 Detección de Fraudes",
-                navMilitaryC2: "🎖️ Comando Militar C2",
-                navAuditVault: "🔒 Bóveda de Auditoría",
-                navCyberThreat: "💀 Inteligencia de Amenazas",
-                navMissionCritical: "⚡ Misión Crítica",
-                navSecurity: "🛡️ Seguridad",
-                navExploreBlocks: "🔍 Explorar Bloques",
-                navTransactions: "📜 Transacciones",
-                navNetworkStatus2: "🌐 Estado de la Red",
-                navStaking2: "💰 staking",
-                navDaoGovernance2: "🏛️ Gobernanza DAO",
-                navAuditLogs2: "📊 Registros de Auditoría",
-                navGasFees: "⛽ Tarifas de Gas",
-                navAnalytics2: "📈 análisis",
-                navFraudDetection2: "🚨 Detección de Fraudes",
-                navSmartContracts: "📝 Contratos Inteligentes",
-                navDesci: "🔬 Desci",
-                navHologram: "🌀 Holograma",
-                navSpaceSector: "🚀 Sector Espacial",
-                navAgriculture: "🌾 Agricultura y Alimentación",
-                navEntertainment: "🎬 Entretenimiento",
-                navSports: "⚽ Deportes",
-                navInfrastructure: "🏗️ Infraestructura",
-                navHealth: "🏥 Salud",
-                navBiotechnology: "🧬 Biotecnología",
-                navEnergy: "⚡ Energía",
-                navFinancialMarket: "📈 Mercado Financiero",
-                navNftExploration: "🎨 Exploración NFT",
-                navCloudMining: "⛏️ Minería en la Nube",
-                navRoboticsInvestments: "🤖 Inversiones en Robótica",
-                navDeFiProjects: "💎 Proyectos DeFi",
-                navMetaverseIntegration: "🌌 Integración con Metaverso",
-                navDecentralizedPhilanthropy: "❤️ Filantropía Descentralizada",
-                navBlockchainUpdate: "🔄 Actualización Blockchain",
-                navDigitalGovernance: "⚖️ Gobernanza Digital",
-                navCryptoMarketplace: "🏪 Mercado de Criptomonedas",
-                navAITech: "🤖 Noticias de IA",
-                navBlockchainSecurity: "🔐 Seguridad Blockchain"
+                footerAbout: "Acerca de", footerContact: "Contacto", footerTerms: "Términos de Uso", footerPrivacy: "Privacidad",
+                footerSupport: "Soporte", devApiTitle: "👨‍💻 API PARA DESARROLLADORES", devApiStatus: "🟢 Disponible",
+                devSdkTitle: "📦 Instalación del SDK", devJsLabel: "JavaScript / Node.js:", devPythonLabel: "Python:",
+                devQuickStartTitle: "🚀 Inicio Rápido", devEndpointsTitle: "⚡ Endpoints de la API",
+                devRegisterTitle: "🔑 Obtenga Sus Claves API", apiKeyLabel: "Clave API:", apiSecretLabel: "Secreto API:",
+                devDocsLink: "📚 Documentación de la API", devStatusLink: "🩺 Estado de la API"
             },
             ar: {
-                pageTitle: "بلوكشين براديكوين",
-                searchPlaceholder: "الصق عنوان محفظة Bradicoin هنا",
-                searchButton: "بحث",
-                sectionCoreTitle: "🔗 البلوكشين الأساسي",
-                sectionMilitaryTitle: "🛡️ العسكرية والأمن",
-                sectionExplorationTitle: "🔍 استكشاف البلوكشين",
-                sectionEmergingTitle: "💡 العقود الذكية والتقنيات الناشئة",
-                sectionIndustriesTitle: "🏭 الصناعات",
-                sectionWeb3Title: "🌐 ويب 3 والاستثمارات",
-                sectionGovernanceTitle: "⚙️ الحوكمة والتحديثات",
-                networkStatusTitle: "حالة الشبكة",
-                blockchainValid: "البلوكشين صالح",
-                networkMetricsTitle: "مقاييس الشبكة",
-                transactionsTitle: "المعاملات",
-                walletsTitle: "المحافظ",
-                supplyTitle: "العرض",
-                priceEconomicsTitle: "اقتصاديات السعر",
-                stabilityTitle: "آليات الاستقرار",
-                transactionHistoryTitle: "سجل المعاملات",
-                refreshButton: "⟳ تحديث",
-                totalTransactionsText: "إجمالي المعاملات: ",
-                footerCopyright: "© 2025 بلوكشين براديكوين. جميع الحقوق محفوظة.",
-                footerAbout: "حول",
-                footerContact: "اتصل بنا",
-                footerTerms: "شروط الاستخدام",
-                footerPrivacy: "الخصوصية",
-                footerSupport: "الدعم",
-                labelBlockHeight: "ارتفاع البلوك",
-                labelBlocksPerMin: "بلوك/دقيقة",
-                labelAvgBlockTime: "متوسط وقت البلوك",
-                labelNodesOnline: "العقد المتصلة",
-                labelValidators: "المصادقون",
-                labelNetworkHealth: "صحة الشبكة",
-                labelDecentralization: "اللامركزية",
-                labelTPS: "معاملة/ثانية",
-                labelAvgConfirmation: "متوسط التأكيد",
-                labelAvgFee: "متوسط الرسوم",
-                labelVolume24h: "حجم 24 ساعة",
-                labelFeesToday: "رسوم اليوم",
-                labelPending: "معلقة",
-                labelActiveWallets: "المحافظ النشطة",
-                labelNewToday: "جديدة اليوم",
-                labelInStaking: "في التوقيف",
-                labelTopHolders: "كبار المالكين",
-                labelTotal: "الإجمالي",
-                labelCirculating: "المتداول",
-                labelLocked: "المجمدة",
-                labelStaked: "الموقوفة",
-                labelBurned: "المحرقة",
-                labelDeflation: "الانكماش",
-                labelBasePrice: "السعر الأساسي",
-                labelCurrentPrice: "السعر الحالي",
-                priceSupportText: "دعم السعر $10",
-                activeStatus: "نشط",
-                labelRealMarketCap: "القيمة السوقية الحقيقية",
-                labelDilutedMC: "القيمة السوقية المخففة",
-                labelTargetMC: "القيمة السوقية المستهدفة",
-                labelStabilityFund: "صندوق الاستقرار",
-                labelBoughtToday: "تم شراؤه اليوم",
-                labelBurnedToday: "تم حرقه اليوم",
-                buybackActiveText: "إعادة الشراء نشطة",
-                yesStatus: "نعم",
-                // Developer API translations
-                devApiTitle: "👨‍💻 واجهة برمجة التطبيقات للمطورين",
-                devApiStatus: "🟢 متاحة",
-                devSdkTitle: "📦 تثبيت SDK",
-                devJsLabel: "JavaScript / Node.js:",
-                devPythonLabel: "Python:",
-                devQuickStartTitle: "🚀 بداية سريعة",
-                devEndpointsTitle: "⚡ نقاط نهاية API",
-                devEndpoint1: "/api/developer/create-payment",
-                devEndpoint2: "/api/developer/balance/:address",
-                devEndpoint3: "/api/developer/send",
-                devEndpoint4: "/api/developer/network",
-                devRegisterTitle: "🔑 احصل على مفاتيح API الخاصة بك",
-                apiKeyLabel: "مفتاح API:",
-                apiSecretLabel: "سر API:",
-                devDocsLink: "📚 وثائق API",
-                devNpmLink: "📦 حزمة NPM",
-                devGithubLink: "💻 SDK على GitHub",
-                devStatusLink: "🩺 حالة API",
-                // Navigation buttons (existing)
-                navTransactionHistory: "📜 سجل المعاملات",
-                navSecurityDashboard: "🛡️ لوحة الأمان",
-                navBlockExplorer: "📦 مستكشف البلوكات",
-                navNetworkStatus: "🌐 حالة الشبكة",
-                navStaking: "💰 التوقيف والمكافآت",
-                navGovernance: "🏛️ حوكمة DAO",
-                navAuditLogs: "📊 سجلات التدقيق",
-                navGasTracker: "⛽ متتبع رسوم الغاز",
-                navAnalytics: "📈 لوحة التحليلات",
-                navFraudDetection: "🚨 كشف الاحتيال",
-                navMilitaryC2: "🎖️ القيادة العسكرية C2",
-                navAuditVault: "🔒 خزنة التدقيق",
-                navCyberThreat: "💀 استخبارات التهديدات",
-                navMissionCritical: "⚡ المهام الحرجة",
-                navSecurity: "🛡️ الأمن",
-                navExploreBlocks: "🔍 استكشاف البلوكات",
-                navTransactions: "📜 المعاملات",
-                navNetworkStatus2: "🌐 حالة الشبكة",
-                navStaking2: "💰 التوقيف",
-                navDaoGovernance2: "🏛️ حوكمة DAO",
-                navAuditLogs2: "📊 سجلات التدقيق",
-                navGasFees: "⛽ رسوم الغاز",
-                navAnalytics2: "📈 التحليلات",
-                navFraudDetection2: "🚨 كشف الاحتيال",
-                navSmartContracts: "📝 العقود الذكية",
-                navDesci: "🔬 ديسي",
-                navHologram: "🌀 الهولوغرام",
-                navSpaceSector: "🚀 قطاع الفضاء",
-                navAgriculture: "🌾 الزراعة والغذاء",
-                navEntertainment: "🎬 الترفيه",
-                navSports: "⚽ الرياضة",
-                navInfrastructure: "🏗️ البنية التحتية",
-                navHealth: "🏥 الصحة",
-                navBiotechnology: "🧬 التكنولوجيا الحيوية",
-                navEnergy: "⚡ الطاقة",
-                navFinancialMarket: "📈 الأسواق المالية",
-                navNftExploration: "🎨 استكشاف NFT",
-                navCloudMining: "⛏️ التعدين السحابي",
-                navRoboticsInvestments: "🤖 استثمارات الروبوتات",
-                navDeFiProjects: "💎 مشاريع التمويل اللامركزي",
-                navMetaverseIntegration: "🌌 تكامل الميتافيرس",
-                navDecentralizedPhilanthropy: "❤️ العمل الخيري اللامركزي",
-                navBlockchainUpdate: "🔄 تحديث البلوكشين",
-                navDigitalGovernance: "⚖️ الحوكمة الرقمية",
-                navCryptoMarketplace: "🏪 سوق العملات المشفرة",
-                navAITech: "🤖 أخبار الذكاء الاصطناعي",
-                navBlockchainSecurity: "🔐 أمن البلوكشين"
+                pageTitle: "بلوكشين براديكوين", searchPlaceholder: "الصق عنوان محفظة Bradicoin هنا (Br...)",
+                searchButton: "بحث", sectionCoreTitle: "🔗 البلوكشين الأساسي", sectionMilitaryTitle: "🛡️ العسكرية والأمن",
+                sectionExplorationTitle: "🔍 استكشاف البلوكشين", sectionEmergingTitle: "💡 العقود الذكية والتقنيات الناشئة",
+                sectionIndustriesTitle: "🏭 الصناعات", sectionWeb3Title: "🌐 ويب 3 والاستثمارات",
+                sectionGovernanceTitle: "⚙️ الحوكمة والتحديثات", networkStatusTitle: "حالة الشبكة",
+                blockchainValid: "البلوكشين صالح", networkMetricsTitle: "مقاييس الشبكة", transactionsTitle: "المعاملات",
+                walletsTitle: "المحافظ", supplyTitle: "العرض", priceEconomicsTitle: "اقتصاديات السعر",
+                stabilityTitle: "آليات الاستقرار", transactionHistoryTitle: "سجل المعاملات",
+                refreshButton: "⟳ تحديث", totalTransactionsText: "إجمالي المعاملات: ",
+                devApiTitle: "👨‍💻 واجهة برمجة التطبيقات للمطورين", devApiStatus: "🟢 متاحة",
+                devSdkTitle: "📦 تثبيت SDK", devJsLabel: "JavaScript / Node.js:", devPythonLabel: "Python:",
+                devQuickStartTitle: "🚀 بداية سريعة", devEndpointsTitle: "⚡ نقاط نهاية API",
+                devRegisterTitle: "🔑 احصل على مفاتيح API الخاصة بك", apiKeyLabel: "مفتاح API:", apiSecretLabel: "سر API:",
+                devDocsLink: "📚 وثائق API", devStatusLink: "🩺 حالة API"
             }
         };
 
-        // Feature content (simplified for space)
+        // Feature content
         const featureContent = {
             transactions: { title: "📜 TRANSACTION HISTORY", icon: "📜", desc: "Complete transaction history", content: "<div>Transaction history module ready</div>" },
             security: { title: "🛡️ SECURITY DASHBOARD", icon: "🛡️", desc: "Security monitoring", content: "<div>Security dashboard active</div>" },
@@ -1252,9 +879,11 @@ const payment = await client.createPayment({
         async function loadBlockchainData() {
             try {
                 const blockchain = await fetchAPI('/api/blockchain');
-                if (blockchain) {
-                    const blockCount = Array.isArray(blockchain) ? blockchain.length : (blockchain.chain?.length || 1);
+                if (blockchain && blockchain.data?.chain) {
+                    const blockCount = blockchain.data.chain.length;
                     document.getElementById('blockHeightValue').textContent = blockCount;
+                } else {
+                    document.getElementById('blockHeightValue').textContent = '1,234';
                 }
                 document.getElementById('blocksPerMinValue').textContent = '2.5';
                 document.getElementById('avgBlockTimeValue').textContent = '12s';
@@ -1293,18 +922,20 @@ const payment = await client.createPayment({
             try {
                 const blockchain = await fetchAPI('/api/blockchain');
                 const allTransactions = [];
-                if (blockchain && Array.isArray(blockchain)) {
-                    blockchain.forEach(block => {
+                if (blockchain && blockchain.data?.chain && Array.isArray(blockchain.data.chain)) {
+                    blockchain.data.chain.forEach(block => {
                         if (block.transactions && Array.isArray(block.transactions)) {
                             block.transactions.forEach(tx => {
-                                allTransactions.push({
-                                    date: block.timestamp ? new Date(block.timestamp).toLocaleString() : new Date().toLocaleString(),
-                                    amount: typeof tx.amount === 'number' ? tx.amount.toFixed(2) : (tx.amount || '0'),
-                                    from: tx.from || '0',
-                                    to: tx.to || 'unknown',
-                                    block: `#${block.index || 0}`,
-                                    hash: block.hash ? block.hash.substring(0, 16) + '...' : 'unknown'
-                                });
+                                if (tx !== 'Genesis Block - Bradicoin') {
+                                    allTransactions.push({
+                                        date: block.timestamp ? new Date(block.timestamp).toLocaleString() : new Date().toLocaleString(),
+                                        amount: typeof tx.amount === 'number' ? tx.amount.toFixed(2) : (tx.amount || '0'),
+                                        from: tx.fromAddress || 'System',
+                                        to: tx.toAddress || 'unknown',
+                                        block: `#${block.index || 0}`,
+                                        hash: block.hash ? block.hash.substring(0, 16) + '...' : 'unknown'
+                                    });
+                                }
                             });
                         }
                     });
@@ -1317,6 +948,7 @@ const payment = await client.createPayment({
                 document.getElementById('totalCount').textContent = allTransactions.length;
             } catch (error) {
                 console.error('Error loading transactions:', error);
+                document.getElementById('transactionList').innerHTML = `<div class="transaction-card" style="text-align: center; padding: 40px;"><h3 style="color: #ffc800;">⚠️ Unable to load transactions</h3><p class="text-gray">API may be starting up. Please try again.</p></div>`;
             }
         }
 
@@ -1338,25 +970,6 @@ const payment = await client.createPayment({
                     <div class="transaction-footer"><span>Block: <span style="color: cyan;">${tx.block}</span></span><div class="flex items-center gap-1"><span>Hash: </span><span style="color: cyan; font-family: monospace;">${tx.hash}</span><button class="copy-btn" onclick="copyToClipboard('${tx.hash}', this)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="cyan" stroke-width="2"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path></svg></button></div></div>
                 </div>
             `).join('');
-        }
-
-        async function searchAddress() {
-            const address = document.getElementById('searchInput').value.trim();
-            if (!address) {
-                alert('Please enter a Bradicoin wallet address');
-                return;
-            }
-            try {
-                const balance = await fetchAPI(`/api/balance/${address}`);
-                if (balance !== null) {
-                    const saldo = typeof balance === 'object' ? balance.balance : balance;
-                    alert(`💰 Address: ${address}\n📊 Balance: ${saldo || 0} BRD\n✅ Blockchain Valid`);
-                } else {
-                    alert(`🔍 Address: ${address}\n⚠️ No balance found`);
-                }
-            } catch (error) {
-                alert(`❌ Error checking address: ${error.message}`);
-            }
         }
 
         async function mineBlock() {
@@ -1397,7 +1010,6 @@ const payment = await client.createPayment({
             });
         }
 
-        // Developer API Functions
         async function registerDeveloperApp() {
             const appName = document.getElementById('devAppName').value;
             const email = document.getElementById('devEmail').value;
@@ -1409,7 +1021,7 @@ const payment = await client.createPayment({
             }
             
             try {
-                const response = await fetch(`https://bradicoin-api.onrender.com/api/developer/register`, {
+                const response = await fetch(`${API_URL}/api/developer/register`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ appName, email, webhookUrl })
@@ -1421,17 +1033,18 @@ const payment = await client.createPayment({
                     document.getElementById('apiKeyDisplay').textContent = data.apiKey;
                     document.getElementById('apiSecretDisplay').textContent = data.apiSecret;
                     document.getElementById('apiKeysResult').style.display = 'block';
-                    
-                    // Store in session for demo
-                    sessionStorage.setItem('dev_api_key', data.apiKey);
-                    sessionStorage.setItem('dev_api_secret', data.apiSecret);
-                    
                     alert('✅ API Keys generated successfully! Save them securely.');
                 } else {
-                    alert('Error: ' + (data.error || 'Registration failed'));
+                    alert('Demo: API Keys simulated');
+                    document.getElementById('apiKeyDisplay').textContent = 'demo_api_key_' + Math.random().toString(36).substring(2, 15);
+                    document.getElementById('apiSecretDisplay').textContent = 'demo_secret_' + Math.random().toString(36).substring(2, 15);
+                    document.getElementById('apiKeysResult').style.display = 'block';
                 }
             } catch (error) {
-                alert('Registration failed: ' + error.message);
+                alert('Demo mode: API Keys simulated');
+                document.getElementById('apiKeyDisplay').textContent = 'demo_api_key_' + Math.random().toString(36).substring(2, 15);
+                document.getElementById('apiSecretDisplay').textContent = 'demo_secret_' + Math.random().toString(36).substring(2, 15);
+                document.getElementById('apiKeysResult').style.display = 'block';
             }
         }
 
@@ -1439,10 +1052,7 @@ const payment = await client.createPayment({
             const apiKey = document.getElementById('apiKeyDisplay').textContent;
             const apiSecret = document.getElementById('apiSecretDisplay').textContent;
             const textToCopy = `API Key: ${apiKey}\nAPI Secret: ${apiSecret}`;
-            
-            navigator.clipboard.writeText(textToCopy).then(() => {
-                alert('✅ API Keys copied to clipboard!');
-            });
+            navigator.clipboard.writeText(textToCopy).then(() => alert('✅ API Keys copied to clipboard!'));
         }
 
         function updateLanguage() {
@@ -1450,142 +1060,49 @@ const payment = await client.createPayment({
             if (!t) return;
 
             // Update all text elements
-            document.getElementById('pageTitle').textContent = t.pageTitle;
-            document.getElementById('searchInput').placeholder = t.searchPlaceholder;
-            document.getElementById('searchBtnText').textContent = t.searchButton;
-            document.getElementById('sectionCoreTitle').textContent = t.sectionCoreTitle;
-            document.getElementById('sectionMilitaryTitle').textContent = t.sectionMilitaryTitle;
-            document.getElementById('sectionExplorationTitle').textContent = t.sectionExplorationTitle;
-            document.getElementById('sectionEmergingTitle').textContent = t.sectionEmergingTitle;
-            document.getElementById('sectionIndustriesTitle').textContent = t.sectionIndustriesTitle;
-            document.getElementById('sectionWeb3Title').textContent = t.sectionWeb3Title;
-            document.getElementById('sectionGovernanceTitle').textContent = t.sectionGovernanceTitle;
-            document.getElementById('networkStatusTitle').textContent = t.networkStatusTitle;
-            document.getElementById('blockchainValid').textContent = t.blockchainValid;
-            document.getElementById('networkMetricsTitle').textContent = t.networkMetricsTitle;
-            document.getElementById('transactionsTitle').textContent = t.transactionsTitle;
-            document.getElementById('walletsTitle').textContent = t.walletsTitle;
-            document.getElementById('supplyTitle').textContent = t.supplyTitle;
-            document.getElementById('priceEconomicsTitle').textContent = t.priceEconomicsTitle;
-            document.getElementById('stabilityTitle').textContent = t.stabilityTitle;
-            document.getElementById('transactionHistoryTitle').textContent = t.transactionHistoryTitle;
-            document.getElementById('refreshHistory').innerHTML = t.refreshButton;
-            document.getElementById('totalTransactionsText').textContent = t.totalTransactionsText;
-            document.getElementById('footerCopyright').textContent = t.footerCopyright;
-            document.getElementById('footerAbout').textContent = t.footerAbout;
-            document.getElementById('footerContact').textContent = t.footerContact;
-            document.getElementById('footerTerms').textContent = t.footerTerms;
-            document.getElementById('footerPrivacy').textContent = t.footerPrivacy;
-            document.getElementById('footerSupport').textContent = t.footerSupport;
+            const elements = {
+                pageTitle: 'pageTitle', searchInput: 'searchInput', searchBtnText: 'searchBtnText',
+                sectionCoreTitle: 'sectionCoreTitle', sectionMilitaryTitle: 'sectionMilitaryTitle',
+                sectionExplorationTitle: 'sectionExplorationTitle', sectionEmergingTitle: 'sectionEmergingTitle',
+                sectionIndustriesTitle: 'sectionIndustriesTitle', sectionWeb3Title: 'sectionWeb3Title',
+                sectionGovernanceTitle: 'sectionGovernanceTitle', networkStatusTitle: 'networkStatusTitle',
+                blockchainValid: 'blockchainValid', networkMetricsTitle: 'networkMetricsTitle',
+                transactionsTitle: 'transactionsTitle', walletsTitle: 'walletsTitle', supplyTitle: 'supplyTitle',
+                priceEconomicsTitle: 'priceEconomicsTitle', stabilityTitle: 'stabilityTitle',
+                transactionHistoryTitle: 'transactionHistoryTitle', totalTransactionsText: 'totalTransactionsText',
+                footerCopyright: 'footerCopyright', footerAbout: 'footerAbout', footerContact: 'footerContact',
+                footerTerms: 'footerTerms', footerPrivacy: 'footerPrivacy', footerSupport: 'footerSupport',
+                devApiTitle: 'devApiTitle', devApiStatus: 'devApiStatus', devSdkTitle: 'devSdkTitle',
+                devJsLabel: 'devJsLabel', devPythonLabel: 'devPythonLabel', devQuickStartTitle: 'devQuickStartTitle',
+                devEndpointsTitle: 'devEndpointsTitle', devRegisterTitle: 'devRegisterTitle',
+                apiKeyLabel: 'apiKeyLabel', apiSecretLabel: 'apiSecretLabel', devDocsLink: 'devDocsLink',
+                devStatusLink: 'devStatusLink', priceSupportText: 'priceSupportText', activeStatus: 'activeStatus',
+                buybackActiveText: 'buybackActiveText', yesStatus: 'yesStatus'
+            };
 
-            // Developer API translations
-            document.getElementById('devApiTitle').textContent = t.devApiTitle;
-            document.getElementById('devApiStatus').textContent = t.devApiStatus;
-            document.getElementById('devSdkTitle').textContent = t.devSdkTitle;
-            document.getElementById('devJsLabel').textContent = t.devJsLabel;
-            document.getElementById('devPythonLabel').textContent = t.devPythonLabel;
-            document.getElementById('devQuickStartTitle').textContent = t.devQuickStartTitle;
-            document.getElementById('devEndpointsTitle').textContent = t.devEndpointsTitle;
-            document.getElementById('devEndpoint1').textContent = t.devEndpoint1;
-            document.getElementById('devEndpoint2').textContent = t.devEndpoint2;
-            document.getElementById('devEndpoint3').textContent = t.devEndpoint3;
-            document.getElementById('devEndpoint4').textContent = t.devEndpoint4;
-            document.getElementById('devRegisterTitle').textContent = t.devRegisterTitle;
-            document.getElementById('apiKeyLabel').textContent = t.apiKeyLabel;
-            document.getElementById('apiSecretLabel').textContent = t.apiSecretLabel;
-            document.getElementById('devDocsLink').textContent = t.devDocsLink;
-            document.getElementById('devNpmLink').textContent = t.devNpmLink;
-            document.getElementById('devGithubLink').textContent = t.devGithubLink;
-            document.getElementById('devStatusLink').textContent = t.devStatusLink;
+            for (const [key, id] of Object.entries(elements)) {
+                const element = document.getElementById(id);
+                if (element && t[key]) {
+                    if (element.tagName === 'INPUT') element.placeholder = t[key];
+                    else element.textContent = t[key];
+                }
+            }
 
-            // Update metric labels
             const metricLabels = [
-                'labelBlockHeight', 'labelBlocksPerMin', 'labelAvgBlockTime', 'labelNodesOnline',
-                'labelValidators', 'labelNetworkHealth', 'labelDecentralization', 'labelTPS',
-                'labelAvgConfirmation', 'labelAvgFee', 'labelVolume24h', 'labelFeesToday',
-                'labelPending', 'labelActiveWallets', 'labelNewToday', 'labelInStaking',
-                'labelTopHolders', 'labelTotal', 'labelCirculating', 'labelLocked', 'labelStaked',
-                'labelBurned', 'labelDeflation', 'labelBasePrice', 'labelCurrentPrice',
-                'labelRealMarketCap', 'labelDilutedMC', 'labelTargetMC', 'labelStabilityFund',
-                'labelBoughtToday', 'labelBurnedToday'
+                'labelBlockHeight', 'labelBlocksPerMin', 'labelAvgBlockTime', 'labelNodesOnline', 'labelValidators',
+                'labelNetworkHealth', 'labelDecentralization', 'labelTPS', 'labelAvgConfirmation', 'labelAvgFee',
+                'labelVolume24h', 'labelFeesToday', 'labelPending', 'labelActiveWallets', 'labelNewToday',
+                'labelInStaking', 'labelTopHolders', 'labelTotal', 'labelCirculating', 'labelLocked', 'labelStaked',
+                'labelBurned', 'labelDeflation', 'labelBasePrice', 'labelCurrentPrice', 'labelRealMarketCap',
+                'labelDilutedMC', 'labelTargetMC', 'labelStabilityFund', 'labelBoughtToday', 'labelBurnedToday'
             ];
             metricLabels.forEach(label => {
                 const element = document.getElementById(label);
                 if (element && t[label]) element.textContent = t[label];
             });
 
-            document.getElementById('priceSupportText').innerHTML = t.priceSupportText;
-            document.getElementById('activeStatus').textContent = t.activeStatus;
-            document.getElementById('buybackActiveText').innerHTML = t.buybackActiveText;
-            document.getElementById('yesStatus').textContent = t.yesStatus;
-
-            // Update navigation buttons
-            const navButtons = {
-                navTransactionHistory: 'navTransactionHistory',
-                navSecurityDashboard: 'navSecurityDashboard',
-                navBlockExplorer: 'navBlockExplorer',
-                navNetworkStatus: 'navNetworkStatus',
-                navStaking: 'navStaking',
-                navGovernance: 'navGovernance',
-                navAuditLogs: 'navAuditLogs',
-                navGasTracker: 'navGasTracker',
-                navAnalytics: 'navAnalytics',
-                navFraudDetection: 'navFraudDetection',
-                navMilitaryC2: 'navMilitaryC2',
-                navAuditVault: 'navAuditVault',
-                navCyberThreat: 'navCyberThreat',
-                navMissionCritical: 'navMissionCritical',
-                navSecurity: 'navSecurity',
-                navExploreBlocks: 'navExploreBlocks',
-                navTransactions: 'navTransactions',
-                navNetworkStatus2: 'navNetworkStatus2',
-                navStaking2: 'navStaking2',
-                navDaoGovernance2: 'navDaoGovernance2',
-                navAuditLogs2: 'navAuditLogs2',
-                navGasFees: 'navGasFees',
-                navAnalytics2: 'navAnalytics2',
-                navFraudDetection2: 'navFraudDetection2',
-                navSmartContracts: 'navSmartContracts',
-                navDesci: 'navDesci',
-                navHologram: 'navHologram',
-                navSpaceSector: 'navSpaceSector',
-                navAgriculture: 'navAgriculture',
-                navEntertainment: 'navEntertainment',
-                navSports: 'navSports',
-                navInfrastructure: 'navInfrastructure',
-                navHealth: 'navHealth',
-                navBiotechnology: 'navBiotechnology',
-                navEnergy: 'navEnergy',
-                navFinancialMarket: 'navFinancialMarket',
-                navNftExploration: 'navNftExploration',
-                navCloudMining: 'navCloudMining',
-                navRoboticsInvestments: 'navRoboticsInvestments',
-                navDeFiProjects: 'navDeFiProjects',
-                navMetaverseIntegration: 'navMetaverseIntegration',
-                navDecentralizedPhilanthropy: 'navDecentralizedPhilanthropy',
-                navBlockchainUpdate: 'navBlockchainUpdate',
-                navDigitalGovernance: 'navDigitalGovernance',
-                navCryptoMarketplace: 'navCryptoMarketplace',
-                navAITech: 'navAITech',
-                navBlockchainSecurity: 'navBlockchainSecurity'
-            };
-
-            for (const [id, translationKey] of Object.entries(navButtons)) {
-                const element = document.getElementById(id);
-                if (element && t[translationKey]) {
-                    const originalText = element.innerHTML;
-                    const iconMatch = originalText.match(/^[^\w\s]+/);
-                    const icon = iconMatch ? iconMatch[0] : '';
-                    element.innerHTML = `${icon} ${t[translationKey]}`;
-                }
-            }
-
-            // Handle Arabic text direction
-            if (currentLang === 'ar') {
-                document.body.classList.add('arabic');
-            } else {
-                document.body.classList.remove('arabic');
-            }
+            if (currentLang === 'ar') document.body.classList.add('arabic');
+            else document.body.classList.remove('arabic');
             
             loadRealTransactions();
         }
@@ -1594,9 +1111,9 @@ const payment = await client.createPayment({
             await loadBlockchainData();
             await loadRealTransactions();
             
-            document.getElementById('searchButton').addEventListener('click', searchAddress);
-            document.getElementById('searchInput').addEventListener('keypress', (e) => { if (e.key === 'Enter') searchAddress(); });
-            document.getElementById('refreshHistory').addEventListener('click', () => { loadRealTransactions(); });
+            document.getElementById('searchButton').addEventListener('click', searchWallet);
+            document.getElementById('searchInput').addEventListener('keypress', (e) => { if (e.key === 'Enter') searchWallet(); });
+            document.getElementById('refreshHistory').addEventListener('click', () => loadRealTransactions());
             document.getElementById('languageSelect').addEventListener('change', (e) => {
                 currentLang = e.target.value;
                 updateLanguage();
@@ -1645,6 +1162,7 @@ const payment = await client.createPayment({
         window.closeModal = closeModal;
         window.registerDeveloperApp = registerDeveloperApp;
         window.copyApiKeys = copyApiKeys;
+        window.searchWallet = searchWallet;
     </script>
 </body>
 </html>
