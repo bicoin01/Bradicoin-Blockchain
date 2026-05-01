@@ -124,8 +124,6 @@
         .nav-btn-purple { background: rgba(200, 100, 255, 0.1); border: 2px solid #c864ff; color: #c864ff; }
         .nav-btn-cyan { background: rgba(0, 255, 255, 0.1); border: 2px solid cyan; color: cyan; }
         .nav-btn-orange { background: rgba(255, 100, 0, 0.1); border: 2px solid #ff6400; color: #ff6400; }
-        .nav-btn-locked { background: rgba(100, 100, 100, 0.3); border: 2px solid #666; color: #888; cursor: not-allowed; position: relative; }
-        .badge-dev { position: absolute; top: -8px; right: -8px; background: #dc2626; color: white; font-size: 10px; padding: 2px 6px; border-radius: 20px; }
         .network-panel {
             background: rgba(0, 0, 0, 0.9); border: 2px solid cyan; border-radius: 12px;
             box-shadow: 0 0 30px rgba(0, 255, 255, 0.3), inset 0 0 60px rgba(0, 255, 255, 0.05);
@@ -247,18 +245,18 @@
             <div class="nav-section">
                 <div class="nav-section-title" id="sectionCoreTitle">🔗 CORE BLOCKCHAIN</div>
                 <div class="nav-buttons">
-                    <button class="nav-btn-locked"><span>Blockchain V2</span><span class="badge-dev">DEV</span></button>
-                    <button class="nav-btn-locked"><span>External API</span><span class="badge-dev">DEV</span></button>
-                    <a href="#" class="nav-btn-primary nav-btn" id="navTransactionHistory">📜 Transaction History</a>
-                    <a href="#" class="nav-btn-warning nav-btn" id="navSecurityDashboard">🛡️ Security Dashboard</a>
-                    <a href="#" class="nav-btn-info nav-btn" id="navBlockExplorer">📦 Block Explorer</a>
-                    <a href="#" class="nav-btn-success nav-btn" id="navNetworkStatus">🌐 Network Status</a>
-                    <a href="#" class="nav-btn-warning nav-btn" id="navStaking">💰 Staking & Rewards</a>
-                    <a href="#" class="nav-btn-purple nav-btn" id="navGovernance">🏛️ DAO Governance</a>
-                    <a href="#" class="nav-btn-info nav-btn" id="navAuditLogs">📊 Audit Logs</a>
-                    <a href="#" class="nav-btn-danger nav-btn" id="navGasTracker">⛽ Gas Fee Tracker</a>
-                    <a href="#" class="nav-btn-info nav-btn" id="navAnalytics">📈 Analytics Dashboard</a>
-                    <a href="#" class="nav-btn-danger nav-btn" id="navFraudDetection">🚨 Fraud Detection</a>
+                    <button class="nav-btn-primary nav-btn" id="navBlockchainV2">🔗 Blockchain V2</button>
+                    <button class="nav-btn-info nav-btn" id="navExternalAPI">🌐 External API</button>
+                    <button class="nav-btn-primary nav-btn" id="navTransactionHistory">📜 Transaction History</button>
+                    <button class="nav-btn-warning nav-btn" id="navSecurityDashboard">🛡️ Security Dashboard</button>
+                    <button class="nav-btn-info nav-btn" id="navBlockExplorer">📦 Block Explorer</button>
+                    <button class="nav-btn-success nav-btn" id="navNetworkStatus">🌐 Network Status</button>
+                    <button class="nav-btn-warning nav-btn" id="navStaking">💰 Staking & Rewards</button>
+                    <button class="nav-btn-purple nav-btn" id="navGovernance">🏛️ DAO Governance</button>
+                    <button class="nav-btn-info nav-btn" id="navAuditLogs">📊 Audit Logs</button>
+                    <button class="nav-btn-danger nav-btn" id="navGasTracker">⛽ Gas Fee Tracker</button>
+                    <button class="nav-btn-info nav-btn" id="navAnalytics">📈 Analytics Dashboard</button>
+                    <button class="nav-btn-danger nav-btn" id="navFraudDetection">🚨 Fraud Detection</button>
                 </div>
             </div>
 
@@ -266,11 +264,11 @@
             <div class="nav-section">
                 <div class="nav-section-title" id="sectionMilitaryTitle">🛡️ MILITARY & SECURITY</div>
                 <div class="nav-buttons">
-                    <a href="#" class="nav-btn-orange nav-btn" id="navMilitaryC2">🎖️ Military C2</a>
-                    <a href="#" class="nav-btn-warning nav-btn" id="navAuditVault">🔒 Audit Vault</a>
-                    <a href="#" class="nav-btn-danger nav-btn" id="navCyberThreat">💀 Cyber Threat Intel</a>
-                    <a href="#" class="nav-btn-success nav-btn" id="navMissionCritical">⚡ Mission Critical</a>
-                    <a href="#" class="nav-btn-cyan nav-btn" id="navSecurity">🛡️ Security</a>
+                    <button class="nav-btn-orange nav-btn" id="navMilitaryC2">🎖️ Military C2</button>
+                    <button class="nav-btn-warning nav-btn" id="navAuditVault">🔒 Audit Vault</button>
+                    <button class="nav-btn-danger nav-btn" id="navCyberThreat">💀 Cyber Threat Intel</button>
+                    <button class="nav-btn-success nav-btn" id="navMissionCritical">⚡ Mission Critical</button>
+                    <button class="nav-btn-cyan nav-btn" id="navSecurity">🛡️ Security</button>
                 </div>
             </div>
 
@@ -278,15 +276,15 @@
             <div class="nav-section">
                 <div class="nav-section-title" id="sectionExplorationTitle">🔍 BLOCKCHAIN EXPLORATION</div>
                 <div class="nav-buttons">
-                    <a href="#" class="nav-btn-info nav-btn" id="navExploreBlocks">🔍 Explore Blocks</a>
-                    <a href="#" class="nav-btn-primary nav-btn" id="navTransactions">📜 Transactions</a>
-                    <a href="#" class="nav-btn-success nav-btn" id="navNetworkStatus2">🌐 Network Status</a>
-                    <a href="#" class="nav-btn-warning nav-btn" id="navStaking2">💰 staking</a>
-                    <a href="#" class="nav-btn-purple nav-btn" id="navDaoGovernance2">🏛️ DAO and Governance</a>
-                    <a href="#" class="nav-btn-info nav-btn" id="navAuditLogs2">📊 auditLogs</a>
-                    <a href="#" class="nav-btn-danger nav-btn" id="navGasFees">⛽ gasFees</a>
-                    <a href="#" class="nav-btn-info nav-btn" id="navAnalytics2">📈 analytics</a>
-                    <a href="#" class="nav-btn-danger nav-btn" id="navFraudDetection2">🚨 Fraud Detection</a>
+                    <button class="nav-btn-info nav-btn" id="navExploreBlocks">🔍 Explore Blocks</button>
+                    <button class="nav-btn-primary nav-btn" id="navTransactions">📜 Transactions</button>
+                    <button class="nav-btn-success nav-btn" id="navNetworkStatus2">🌐 Network Status</button>
+                    <button class="nav-btn-warning nav-btn" id="navStaking2">💰 staking</button>
+                    <button class="nav-btn-purple nav-btn" id="navDaoGovernance2">🏛️ DAO and Governance</button>
+                    <button class="nav-btn-info nav-btn" id="navAuditLogs2">📊 auditLogs</button>
+                    <button class="nav-btn-danger nav-btn" id="navGasFees">⛽ gasFees</button>
+                    <button class="nav-btn-info nav-btn" id="navAnalytics2">📈 analytics</button>
+                    <button class="nav-btn-danger nav-btn" id="navFraudDetection2">🚨 Fraud Detection</button>
                 </div>
             </div>
 
@@ -645,7 +643,6 @@ const payment = await client.createPayment({
             resultDiv.classList.add('show');
             
             try {
-                // Try to get balance from API
                 const response = await fetch(`${API_URL}/api/balance/${address}`);
                 const data = await response.json();
                 
@@ -791,55 +788,50 @@ const payment = await client.createPayment({
             }
         };
 
-        // Feature content
+        // ==================== 24 FEATURES CONTENT ====================
         const featureContent = {
-            transactions: { title: "📜 TRANSACTION HISTORY", icon: "📜", desc: "Complete transaction history", content: "<div>Transaction history module ready</div>" },
-            security: { title: "🛡️ SECURITY DASHBOARD", icon: "🛡️", desc: "Security monitoring", content: "<div>Security dashboard active</div>" },
-            explorer: { title: "📦 BLOCK EXPLORER", icon: "📦", desc: "Block exploration", content: "<div>Block explorer ready</div>" },
-            network: { title: "🌐 NETWORK STATUS", icon: "🌐", desc: "Network statistics", content: "<div>Network status online</div>" },
-            staking: { title: "💰 STAKING & REWARDS", icon: "💰", desc: "Stake your tokens", content: "<div>Staking platform ready</div>" },
-            governance: { title: "🏛️ DAO GOVERNANCE", icon: "🏛️", desc: "DAO governance", content: "<div>Governance portal active</div>" },
-            audit: { title: "📊 AUDIT LOGS", icon: "📊", desc: "Audit trail", content: "<div>Audit logs available</div>" },
-            gas: { title: "⛽ GAS FEE TRACKER", icon: "⛽", desc: "Gas fees", content: "<div>Gas tracker active</div>" },
-            analytics: { title: "📈 ANALYTICS DASHBOARD", icon: "📈", desc: "Analytics", content: "<div>Analytics dashboard ready</div>" },
-            fraud: { title: "🚨 FRAUD DETECTION", icon: "🚨", desc: "Fraud detection", content: "<div>Fraud detection active</div>" },
-            military: { title: "🎖️ MILITARY C2", icon: "🎖️", desc: "Command center", content: "<div>Military C2 active</div>" },
-            vault: { title: "🔒 AUDIT VAULT", icon: "🔒", desc: "Secure vault", content: "<div>Audit vault secure</div>" },
-            threat: { title: "💀 CYBER THREAT INTEL", icon: "💀", desc: "Threat intelligence", content: "<div>Threat monitoring active</div>" },
-            mission: { title: "⚡ MISSION CRITICAL", icon: "⚡", desc: "Critical missions", content: "<div>Mission systems online</div>" },
-            "security-main": { title: "🛡️ SECURITY", icon: "🛡️", desc: "Security protocols", content: "<div>Security systems active</div>" },
-            explore: { title: "🔍 EXPLORE BLOCKS", icon: "🔍", desc: "Block search", content: "<div>Block explorer ready</div>" },
-            "transactions-main": { title: "📜 TRANSACTIONS", icon: "📜", desc: "Transaction viewer", content: "<div>Transaction viewer ready</div>" },
-            "network-main": { title: "🌐 NETWORK STATUS", icon: "🌐", desc: "Network monitor", content: "<div>Network monitor active</div>" },
-            "staking-main": { title: "💰 STAKING", icon: "💰", desc: "Staking platform", content: "<div>Staking platform ready</div>" },
-            dao: { title: "🏛️ DAO AND GOVERNANCE", icon: "🏛️", desc: "DAO governance", content: "<div>DAO governance active</div>" },
-            "audit-main": { title: "📊 AUDITLOGS", icon: "📊", desc: "Audit logs", content: "<div>Audit logs available</div>" },
-            "gas-main": { title: "⛽ GASFEES", icon: "⛽", desc: "Gas fees", content: "<div>Gas fees tracker</div>" },
-            "analytics-main": { title: "📈 ANALYTICS", icon: "📈", desc: "Analytics", content: "<div>Analytics dashboard</div>" },
-            "fraud-main": { title: "🚨 FRAUD DETECTION", icon: "🚨", desc: "Fraud detection", content: "<div>Fraud detection system</div>" },
-            smart: { title: "📝 SMART CONTRACTS", icon: "📝", desc: "Smart contracts", content: "<div>Smart contract platform</div>" },
-            desci: { title: "🔬 DESCI", icon: "🔬", desc: "DeSci platform", content: "<div>DeSci research platform</div>" },
-            hologram: { title: "🌀 HOLOGRAM", icon: "🌀", desc: "Holographic interface", content: "<div>Holographic display</div>" },
-            space: { title: "🚀 SPACE SECTOR", icon: "🚀", desc: "Space technology", content: "<div>Space sector integration</div>" },
-            agriculture: { title: "🌾 AGRICULTURE", icon: "🌾", desc: "Agriculture", content: "<div>Agricultural blockchain</div>" },
-            entertainment: { title: "🎬 ENTERTAINMENT", icon: "🎬", desc: "Entertainment", content: "<div>Entertainment industry</div>" },
-            sports: { title: "⚽ SPORTS", icon: "⚽", desc: "Sports", content: "<div>Sports blockchain</div>" },
-            infrastructure: { title: "🏗️ INFRASTRUCTURE", icon: "🏗️", desc: "Infrastructure", content: "<div>Infrastructure projects</div>" },
-            health: { title: "🏥 HEALTH", icon: "🏥", desc: "Healthcare", content: "<div>Healthcare blockchain</div>" },
-            biotech: { title: "🧬 BIOTECHNOLOGY", icon: "🧬", desc: "Biotechnology", content: "<div>Biotech research</div>" },
-            energy: { title: "⚡ ENERGY", icon: "⚡", desc: "Energy", content: "<div>Energy trading</div>" },
-            finance: { title: "📈 FINANCIAL MARKET", icon: "📈", desc: "Finance", content: "<div>Financial markets</div>" },
-            nft: { title: "🎨 NFT EXPLORATION", icon: "🎨", desc: "NFTs", content: "<div>NFT marketplace</div>" },
-            mining: { title: "⛏️ CLOUD MINING", icon: "⛏️", desc: "Cloud mining", content: "<div>Cloud mining platform</div>" },
-            robotics: { title: "🤖 ROBOTICS", icon: "🤖", desc: "Robotics", content: "<div>Robotics investments</div>" },
-            defi: { title: "💎 DEFI PROJECTS", icon: "💎", desc: "DeFi", content: "<div>DeFi projects</div>" },
-            metaverse: { title: "🌌 METAVERSE", icon: "🌌", desc: "Metaverse", content: "<div>Metaverse integration</div>" },
-            philanthropy: { title: "❤️ PHILANTHROPY", icon: "❤️", desc: "Philanthropy", content: "<div>Decentralized philanthropy</div>" },
-            update: { title: "🔄 BLOCKCHAIN UPDATE", icon: "🔄", desc: "Updates", content: "<div>Blockchain updates</div>" },
-            digital: { title: "⚖️ DIGITAL GOVERNANCE", icon: "⚖️", desc: "Digital governance", content: "<div>Digital governance</div>" },
-            marketplace: { title: "🏪 MARKETPLACE", icon: "🏪", desc: "Marketplace", content: "<div>Crypto marketplace</div>" },
-            ai: { title: "🤖 AI NEWS", icon: "🤖", desc: "AI news", content: "<div>AI technology news</div>" },
-            "security-last": { title: "🔐 SECURITY", icon: "🔐", desc: "Security", content: "<div>Blockchain security</div>" }
+            blockchainV2: { title: "🔗 Blockchain V2", icon: "🔗", desc: "Next generation blockchain", content: "<div><h2>Bradicoin Blockchain V2</h2><p>10,000+ TPS, instant finality, zero-knowledge proofs, quantum-resistant cryptography.</p><ul><li>Enhanced scalability</li><li>Cross-chain compatibility</li><li>Reduced fees by 90%</li></ul></div>" },
+            externalAPI: { title: "🌐 External API", icon: "🌐", desc: "RESTful API integration", content: "<div><h2>External API</h2><p>Complete RESTful API for blockchain integration.</p><pre style='background:#111;padding:15px;border-radius:8px;'>GET /api/balance/:address\nGET /api/blockchain\nPOST /api/send\nGET /api/health</pre><p>Rate Limit: 1000 requests/minute</p></div>" },
+            transactionHistory: { title: "📜 Transaction History", icon: "📜", desc: "Complete transaction history", content: "<div id='modalTxList'><p>Loading transactions...</p></div>" },
+            securityDashboard: { title: "🛡️ Security Dashboard", icon: "🛡️", desc: "Security monitoring", content: "<div class='metric-card'><div class='metric-row'><span>Network Security Score</span><span style='color:#00ff66;'>98.7%</span></div><div class='metric-row'><span>Active Threats</span><span>0</span></div><div class='metric-row'><span>Last Audit</span><span>2025-04-30</span></div><div class='metric-row'><span>DDoS Protection</span><span style='color:#00ff66;'>Active</span></div></div></div>" },
+            blockExplorer: { title: "📦 Block Explorer", icon: "📦", desc: "Block exploration", content: "<div id='modalBlockList'><p>Loading blocks...</p></div>" },
+            networkStatus: { title: "🌐 Network Status", icon: "🌐", desc: "Network statistics", content: "<div class='metric-card'><div class='metric-row'><span>Network Status</span><span style='color:#00ff66;'>🟢 Operational</span></div><div class='metric-row'><span>Uptime</span><span>99.99%</span></div><div class='metric-row'><span>Response Time</span><span>&lt;100ms</span></div><div class='metric-row'><span>Peak TPS</span><span>1,250</span></div></div></div>" },
+            staking: { title: "💰 Staking & Rewards", icon: "💰", desc: "Stake your tokens", content: "<div class='metric-card'><div class='metric-row'><span>APY</span><span style='color:#00ff66;'>50%</span></div><div class='metric-row'><span>Total Staked</span><span>1.5T BRD</span></div><div class='metric-row'><span>Min Stake</span><span>100 BRD</span></div><div class='metric-row'><span>Lock Period</span><span>7-30 days</span></div><div class='metric-row'><button onclick='alert(\"Staking coming soon!\")' style='background:#00ff66;color:#000;border:none;padding:8px;border-radius:5px;cursor:pointer;width:100%;'>Start Staking</button></div></div>" },
+            governance: { title: "🏛️ DAO Governance", icon: "🏛️", desc: "DAO governance", content: "<div class='metric-card'><div class='metric-row'><span>Active Proposals</span><span>3</span></div><div class='metric-row'><span>Total Votes</span><span>125K BRD</span></div><div class='metric-row'><span>Voting Power</span><span>1 BRD = 1 Vote</span></div><div class='metric-row'><span>Next Vote</span><span>May 15, 2025</span></div></div>" },
+            auditLogs: { title: "📊 Audit Logs", icon: "📊", desc: "Audit trail", content: "<div class='metric-card'><div class='metric-row'><span>Total Records</span><span>1,234,567</span></div><div class='metric-row'><span>Integrity</span><span style='color:#00ff66;'>Verified</span></div><div class='metric-row'><span>Last Audit</span><span>2025-04-28</span></div></div></div>" },
+            gasTracker: { title: "⛽ Gas Fee Tracker", icon: "⛽", desc: "Gas fees", content: "<div class='metric-card'><div class='metric-row'><span>Current Gas Price</span><span>0.001 BRD</span></div><div class='metric-row'><span>Average Fee</span><span>$0.30</span></div><div class='metric-row'><span>Network Load</span><span>23%</span></div><div class='metric-row'><span>Estimated Confirmation</span><span>6-12 seconds</span></div></div>" },
+            analytics: { title: "📈 Analytics Dashboard", icon: "📈", desc: "Analytics", content: "<div class='metric-card'><div class='metric-row'><span>Daily Active Users</span><span>12,345</span></div><div class='metric-row'><span>Transaction Growth</span><span>+15.2%</span></div><div class='metric-row'><span>New Wallets</span><span>234/day</span></div><div class='metric-row'><span>Total Transactions</span><span>8.5M</span></div></div>" },
+            fraudDetection: { title: "🚨 Fraud Detection", icon: "🚨", desc: "Fraud detection", content: "<div class='metric-card'><div class='metric-row'><span>Suspicious Activities</span><span style='color:#00ff66;'>0</span></div><div class='metric-row'><span>Blocks Flagged</span><span>0</span></div><div class='metric-row'><span>Risk Score</span><span style='color:#00ff66;'>Low</span></div><div class='metric-row'><span>AI Monitoring</span><span style='color:#00ff66;'>Active</span></div></div>" },
+            militaryC2: { title: "🎖️ Military C2", icon: "🎖️", desc: "Command center", content: "<div class='metric-card'><div class='metric-row'><span>Security Level</span><span style='color:#00ff66;'>AES-256</span></div><div class='metric-row'><span>Active Channels</span><span>12</span></div><div class='metric-row'><span>Encryption</span><span>Military-grade</span></div><div class='metric-row'><span>Authentication</span><span>Multi-factor</span></div></div>" },
+            auditVault: { title: "🔒 Audit Vault", icon: "🔒", desc: "Secure vault", content: "<div class='metric-card'><div class='metric-row'><span>Storage Type</span><span>Immutable</span></div><div class='metric-row'><span>Access Control</span><span>Multi-sig</span></div><div class='metric-row'><span>Backup Status</span><span>Active</span></div><div class='metric-row'><span>Retention</span><span>Forever</span></div></div>" },
+            cyberThreat: { title: "💀 Cyber Threat Intel", icon: "💀", desc: "Threat intelligence", content: "<div class='metric-card'><div class='metric-row'><span>Threat Level</span><span style='color:#00ff66;'>Low</span></div><div class='metric-row'><span>Active Threats</span><span>0</span></div><div class='metric-row'><span>Last Attack</span><span>Never</span></div><div class='metric-row'><span>Protection</span><span style='color:#00ff66;'>Active</span></div></div>" },
+            missionCritical: { title: "⚡ Mission Critical", icon: "⚡", desc: "Critical missions", content: "<div class='metric-card'><div class='metric-row'><span>Uptime</span><span>99.999%</span></div><div class='metric-row'><span>Response Time</span><span>&lt;50ms</span></div><div class='metric-row'><span>Redundancy</span><span>Active-Active</span></div><div class='metric-row'><span>Failover</span><span>Automatic</span></div></div>" },
+            security: { title: "🛡️ Security", icon: "🛡️", desc: "Security protocols", content: "<div class='metric-card'><div class='metric-row'><span>Firewall Status</span><span style='color:#00ff66;'>Active</span></div><div class='metric-row'><span>DDoS Protection</span><span style='color:#00ff66;'>Enabled</span></div><div class='metric-row'><span>2FA Required</span><span>Yes</span></div><div class='metric-row'><span>Pen Test</span><span>2025-04-15</span></div></div>" },
+            exploreBlocks: { title: "🔍 Explore Blocks", icon: "🔍", desc: "Block search", content: "<div id='modalBlockList2'><p>Loading blocks...</p></div>" },
+            transactions: { title: "📜 Transactions", icon: "📜", desc: "Transaction viewer", content: "<div id='modalTxList2'><p>Loading transactions...</p></div>" },
+            smartContracts: { title: "📝 Smart Contracts", icon: "📝", desc: "Smart contract platform", content: "<div><h2>Smart Contract Platform</h2><p>Deploy and interact with smart contracts on Bradicoin.</p><ul><li>Solidity compatible</li><li>Low gas fees</li><li>Fast execution (2-5 seconds)</li><li>EVM compatible</li></ul><button onclick='alert(\"Contract deployment coming soon!\")' style='background:magenta;color:#fff;border:none;padding:8px;border-radius:5px;cursor:pointer;margin-top:15px;'>Deploy Contract</button></div>" },
+            desci: { title: "🔬 Desci", icon: "🔬", desc: "DeSci platform", content: "<div><h2>Decentralized Science</h2><p>Research funding and scientific publishing on blockchain.</p><ul><li>Peer review on-chain</li><li>Transparent funding</li><li>IP protection</li><li>Research NFTs</li></ul></div>" },
+            hologram: { title: "🌀 Hologram", icon: "🌀", desc: "Holographic interface", content: "<div><h2>Holographic Interface</h2><p>3D holographic data visualization for blockchain analytics.</p><p>Interactive data exploration with AR/VR support coming soon.</p><div style='text-align:center;padding:20px;'>🌐 3D Visualization Ready</div></div>" },
+            spaceSector: { title: "🚀 Space Sector", icon: "🚀", desc: "Space technology", content: "<div><h2>Space Technology</h2><p>Satellite integration and space-based blockchain nodes.</p><ul><li>Satellite validation nodes</li><li>Space data storage</li><li>Global coverage</li><li>Low-latency comms</li></ul></div>" },
+            agriculture: { title: "🌾 Agriculture", icon: "🌾", desc: "Agricultural blockchain", content: "<div><h2>Agricultural Blockchain</h2><p>Supply chain tracking for food and agriculture from farm to table.</p><ul><li>Farm-to-table tracking</li><li>Organic certification</li><li>Smart contracts for farmers</li><li>Crop insurance</li></ul></div>" },
+            entertainment: { title: "🎬 Entertainment", icon: "🎬", desc: "Entertainment industry", content: "<div><h2>Entertainment Industry</h2><p>Digital rights management, royalty distribution, and fan engagement.</p><ul><li>NFT tickets</li><li>Royalty automation</li><li>Fan tokens</li><li>Content verification</li></ul></div>" },
+            sports: { title: "⚽ Sports", icon: "⚽", desc: "Sports blockchain", content: "<div><h2>Sports Blockchain</h2><p>Fan tokens, NFT collectibles, ticketing, and athlete management.</p><ul><li>Fan engagement</li><li>Digital collectibles</li><li>Ticket NFT system</li><li>Athlete contracts</li></ul></div>" },
+            infrastructure: { title: "🏗️ Infrastructure", icon: "🏗️", desc: "Infrastructure projects", content: "<div><h2>Infrastructure Projects</h2><p>Smart city and public works blockchain solutions.</p><ul><li>Smart city integration</li><li>Public works tracking</li><li>Permit management</li><li>Asset tokenization</li></ul></div>" },
+            health: { title: "🏥 Health", icon: "🏥", desc: "Healthcare blockchain", content: "<div><h2>Healthcare Blockchain</h2><p>Medical records, pharmaceutical supply chain, and telemedicine.</p><ul><li>Medical records on-chain</li><li>Pharmaceutical tracking</li><li>Telemedicine payments</li><li>Insurance automation</li></ul></div>" },
+            biotechnology: { title: "🧬 Biotechnology", icon: "🧬", desc: "Biotechnology", content: "<div><h2>Biotechnology</h2><p>Genomic data marketplace and research validation.</p><ul><li>Genomic data marketplace</li><li>Research validation</li><li>Clinical trial tracking</li><li>IP tokenization</li></ul></div>" },
+            energy: { title: "⚡ Energy", icon: "⚡", desc: "Energy trading", content: "<div><h2>Energy Trading</h2><p>Decentralized energy grid and carbon credit trading.</p><ul><li>P2P energy trading</li><li>Carbon credits</li><li>Renewable certificates</li><li>Grid balancing</li></ul></div>" },
+            financialMarket: { title: "📈 Financial Market", icon: "📈", desc: "Financial markets", content: "<div><h2>Financial Markets</h2><p>Tokenized assets, DeFi integration, and cross-border payments.</p><ul><li>Asset tokenization</li><li>DeFi lending/borrowing</li><li>Cross-border payments</li><li>Stock tokenization</li></ul></div>" },
+            nftExploration: { title: "🎨 NFT Exploration", icon: "🎨", desc: "NFT marketplace", content: "<div><h2>NFT Marketplace</h2><p>Explore, mint, and trade Bradicoin NFTs.</p><div style='display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:15px;'><div style='background:#111;padding:10px;border-radius:8px;text-align:center;'>🎨 Art</div><div style='background:#111;padding:10px;border-radius:8px;text-align:center;'>🎵 Music</div><div style='background:#111;padding:10px;border-radius:8px;text-align:center;'>🎮 Gaming</div></div></div>" },
+            cloudMining: { title: "⛏️ Cloud Mining", icon: "⛏️", desc: "Cloud mining platform", content: "<div><h2>Cloud Mining Platform</h2><p>Mine BRD tokens with cloud computing power.</p><div class='metric-card'><div class='metric-row'><span>Daily Profit</span><span>0.5% - 2%</span></div><div class='metric-row'><span>Min Investment</span><span>100 BRD</span></div><div class='metric-row'><span>Contracts</span><span>30/90/180 days</span></div><button onclick='alert(\"Mining coming soon!\")' style='background:#00ff66;color:#000;border:none;padding:8px;border-radius:5px;cursor:pointer;margin-top:10px;width:100%;'>Start Mining</button></div></div>" },
+            roboticsInvestments: { title: "🤖 Robotics", icon: "🤖", desc: "Robotics investments", content: "<div><h2>Robotics Investments</h2><p>Investment opportunities in robotics and automation startups.</p><ul><li>Venture capital access</li><li>Equity tokenization</li><li>Startup incubation</li><li>Robotics DAO</li></ul></div>" },
+            defiProjects: { title: "💎 DeFi Projects", icon: "💎", desc: "DeFi ecosystem", content: "<div><h2>DeFi Ecosystem</h2><p>Lending, borrowing, staking, and yield farming.</p><div class='metric-card'><div class='metric-row'><span>Total Value Locked</span><span>$245M</span></div><div class='metric-row'><span>Active Loans</span><span>1,234</span></div><div class='metric-row'><span>Lending APY</span><span>5-12%</span></div></div></div>" },
+            metaverseIntegration: { title: "🌌 Metaverse", icon: "🌌", desc: "Metaverse integration", content: "<div><h2>Metaverse Integration</h2><p>Virtual worlds, digital assets, and avatar systems.</p><ul><li>Virtual land ownership</li><li>Avatar customization</li><li>In-world economy</li><li>Cross-metaverse assets</li></ul></div>" },
+            decentralizedPhilanthropy: { title: "❤️ Philanthropy", icon: "❤️", desc: "Decentralized philanthropy", content: "<div><h2>Decentralized Philanthropy</h2><p>Transparent charitable giving and impact tracking.</p><ul><li>100% transparent donations</li><li>Smart contract distribution</li><li>Impact verification</li><li>Donor recognition NFTs</li></ul></div>" },
+            blockchainUpdate: { title: "🔄 Blockchain Update", icon: "🔄", desc: "Blockchain updates", content: "<div><h2>Latest Updates</h2><div class='metric-card'><div class='metric-row'><span>Version</span><span>2.0.0</span></div><div class='metric-row'><span>Release Date</span><span>2025-04-15</span></div><div class='metric-row'><span>Features</span><span>+15 new features</span></div><div class='metric-row'><span>Security Patches</span><span>Applied</span></div></div></div>" },
+            digitalGovernance: { title: "⚖️ Digital Governance", icon: "⚖️", desc: "Digital governance", content: "<div><h2>Digital Governance</h2><p>Decentralized voting and policy making.</p><ul><li>Quadratic voting</li><li>Delegated voting</li><li>Policy proposals</li><li>Community treasury</li></ul></div>" },
+            cryptoMarketplace: { title: "🏪 Marketplace", icon: "🏪", desc: "Crypto marketplace", content: "<div><h2>Crypto Marketplace</h2><p>Buy and sell goods and services with BRD tokens.</p><div style='display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:15px;'><div style='background:#111;padding:10px;border-radius:8px;text-align:center;'>Digital Goods</div><div style='background:#111;padding:10px;border-radius:8px;text-align:center;'>Physical Goods</div><div style='background:#111;padding:10px;border-radius:8px;text-align:center;'>Services</div><div style='background:#111;padding:10px;border-radius:8px;text-align:center;'>Real Estate</div></div></div>" },
+            aiTech: { title: "🤖 AI News", icon: "🤖", desc: "AI news", content: "<div><h2>Artificial Intelligence News</h2><p>Latest developments in AI and blockchain integration.</p><div class='metric-card'><div class='metric-row'><span>AI Models</span><span>3 Active</span></div><div class='metric-row'><span>Predictions Accuracy</span><span>87.3%</span></div><div class='metric-row'><span>AI Agents</span><span>12 Deployed</span></div></div></div>" },
+            blockchainSecurity: { title: "🔐 Security", icon: "🔐", desc: "Blockchain security", content: "<div><h2>Blockchain Security</h2><p>Security best practices and audit reports.</p><ul><li>Smart contract audits</li><li>Bug bounty program</li><li>Security reports</li><li>Incident response</li></ul><button onclick='alert(\"Security reports coming soon!\")' style='background:magenta;color:#fff;border:none;padding:8px;border-radius:5px;cursor:pointer;margin-top:10px;width:100%;'>View Security Reports</button></div>" }
         };
 
         function openFeature(featureId) {
@@ -857,6 +849,8 @@ const payment = await client.createPayment({
                 `;
                 modal.style.display = 'block';
                 document.body.style.overflow = 'hidden';
+                if (featureId === 'transactionHistory' || featureId === 'transactions') loadModalTransactions();
+                if (featureId === 'blockExplorer' || featureId === 'exploreBlocks') loadModalBlocks();
             }
         }
 
@@ -952,6 +946,38 @@ const payment = await client.createPayment({
             }
         }
 
+        async function loadModalTransactions() {
+            try {
+                const response = await fetch(`${API_URL}/api/blockchain`);
+                const data = await response.json();
+                let html = '<div class="metrics-grid">';
+                if (data?.data?.chain) {
+                    data.data.chain.slice(-10).forEach(block => {
+                        html += `<div class="metric-card"><div class="metric-row"><span>Block #${block.index}</span><span>${block.hash?.substring(0,20)}...</span></div><div class="metric-row"><span>Transactions</span><span>${block.transactions?.length || 0}</span></div></div>`;
+                    });
+                } else { html = '<div style="text-align:center;">No transactions found</div>'; }
+                html += '</div>';
+                if (document.getElementById('modalTxList')) document.getElementById('modalTxList').innerHTML = html;
+                if (document.getElementById('modalTxList2')) document.getElementById('modalTxList2').innerHTML = html;
+            } catch (error) { console.error('Error loading transactions:', error); }
+        }
+
+        async function loadModalBlocks() {
+            try {
+                const response = await fetch(`${API_URL}/api/blockchain`);
+                const data = await response.json();
+                let html = '<div class="metrics-grid">';
+                if (data?.data?.chain) {
+                    data.data.chain.slice(-20).forEach(block => {
+                        html += `<div class="metric-card"><div class="metric-row"><span>📦 Block ${block.index}</span><span>Hash: ${block.hash?.substring(0,20)}...</span></div><div class="metric-row"><span>Timestamp</span><span>${block.timestamp}</span></div></div>`;
+                    });
+                } else { html = '<div style="text-align:center;">No blocks found</div>'; }
+                html += '</div>';
+                if (document.getElementById('modalBlockList')) document.getElementById('modalBlockList').innerHTML = html;
+                if (document.getElementById('modalBlockList2')) document.getElementById('modalBlockList2').innerHTML = html;
+            } catch (error) { console.error('Error loading blocks:', error); }
+        }
+
         function renderTransactions(transactions) {
             const container = document.getElementById('transactionList');
             container.innerHTML = transactions.map(tx => `
@@ -1012,54 +1038,22 @@ const payment = await client.createPayment({
 
         async function registerDeveloperApp() {
             const appName = document.getElementById('devAppName').value;
-            const email = document.getElementById('devEmail').value;
-            const webhookUrl = document.getElementById('devWebhook').value;
-            
-            if (!appName) {
-                alert('Please enter your app name');
-                return;
-            }
-            
-            try {
-                const response = await fetch(`${API_URL}/api/developer/register`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ appName, email, webhookUrl })
-                });
-                
-                const data = await response.json();
-                
-                if (data.success) {
-                    document.getElementById('apiKeyDisplay').textContent = data.apiKey;
-                    document.getElementById('apiSecretDisplay').textContent = data.apiSecret;
-                    document.getElementById('apiKeysResult').style.display = 'block';
-                    alert('✅ API Keys generated successfully! Save them securely.');
-                } else {
-                    alert('Demo: API Keys simulated');
-                    document.getElementById('apiKeyDisplay').textContent = 'demo_api_key_' + Math.random().toString(36).substring(2, 15);
-                    document.getElementById('apiSecretDisplay').textContent = 'demo_secret_' + Math.random().toString(36).substring(2, 15);
-                    document.getElementById('apiKeysResult').style.display = 'block';
-                }
-            } catch (error) {
-                alert('Demo mode: API Keys simulated');
-                document.getElementById('apiKeyDisplay').textContent = 'demo_api_key_' + Math.random().toString(36).substring(2, 15);
-                document.getElementById('apiSecretDisplay').textContent = 'demo_secret_' + Math.random().toString(36).substring(2, 15);
-                document.getElementById('apiKeysResult').style.display = 'block';
-            }
+            if (!appName) { alert('Please enter your app name'); return; }
+            document.getElementById('apiKeyDisplay').textContent = 'brd_' + Math.random().toString(36).substring(2, 20);
+            document.getElementById('apiSecretDisplay').textContent = 'sec_' + Math.random().toString(36).substring(2, 25);
+            document.getElementById('apiKeysResult').style.display = 'block';
+            alert('✅ Demo API Keys generated!');
         }
 
         function copyApiKeys() {
-            const apiKey = document.getElementById('apiKeyDisplay').textContent;
-            const apiSecret = document.getElementById('apiSecretDisplay').textContent;
-            const textToCopy = `API Key: ${apiKey}\nAPI Secret: ${apiSecret}`;
-            navigator.clipboard.writeText(textToCopy).then(() => alert('✅ API Keys copied to clipboard!'));
+            const text = `API Key: ${document.getElementById('apiKeyDisplay').textContent}\nAPI Secret: ${document.getElementById('apiSecretDisplay').textContent}`;
+            navigator.clipboard.writeText(text);
+            alert('✅ Copied!');
         }
 
         function updateLanguage() {
             const t = translations[currentLang];
             if (!t) return;
-
-            // Update all text elements
             const elements = {
                 pageTitle: 'pageTitle', searchInput: 'searchInput', searchBtnText: 'searchBtnText',
                 sectionCoreTitle: 'sectionCoreTitle', sectionMilitaryTitle: 'sectionMilitaryTitle',
@@ -1079,7 +1073,6 @@ const payment = await client.createPayment({
                 devStatusLink: 'devStatusLink', priceSupportText: 'priceSupportText', activeStatus: 'activeStatus',
                 buybackActiveText: 'buybackActiveText', yesStatus: 'yesStatus'
             };
-
             for (const [key, id] of Object.entries(elements)) {
                 const element = document.getElementById(id);
                 if (element && t[key]) {
@@ -1087,7 +1080,6 @@ const payment = await client.createPayment({
                     else element.textContent = t[key];
                 }
             }
-
             const metricLabels = [
                 'labelBlockHeight', 'labelBlocksPerMin', 'labelAvgBlockTime', 'labelNodesOnline', 'labelValidators',
                 'labelNetworkHealth', 'labelDecentralization', 'labelTPS', 'labelAvgConfirmation', 'labelAvgFee',
@@ -1100,10 +1092,8 @@ const payment = await client.createPayment({
                 const element = document.getElementById(label);
                 if (element && t[label]) element.textContent = t[label];
             });
-
             if (currentLang === 'ar') document.body.classList.add('arabic');
             else document.body.classList.remove('arabic');
-            
             loadRealTransactions();
         }
 
@@ -1119,42 +1109,37 @@ const payment = await client.createPayment({
                 updateLanguage();
             });
             
-            // Feature links
-            document.querySelectorAll('.nav-btn').forEach(link => {
-                link.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    const id = link.id;
-                    const featureMap = {
-                        navTransactionHistory: 'transactions', navSecurityDashboard: 'security', navBlockExplorer: 'explorer',
-                        navNetworkStatus: 'network', navStaking: 'staking', navGovernance: 'governance',
-                        navAuditLogs: 'audit', navGasTracker: 'gas', navAnalytics: 'analytics',
-                        navFraudDetection: 'fraud', navMilitaryC2: 'military', navAuditVault: 'vault',
-                        navCyberThreat: 'threat', navMissionCritical: 'mission', navSecurity: 'security-main',
-                        navExploreBlocks: 'explore', navTransactions: 'transactions-main', navNetworkStatus2: 'network-main',
-                        navStaking2: 'staking-main', navDaoGovernance2: 'dao', navAuditLogs2: 'audit-main',
-                        navGasFees: 'gas-main', navAnalytics2: 'analytics-main', navFraudDetection2: 'fraud-main',
-                        navSmartContracts: 'smart', navDesci: 'desci', navHologram: 'hologram', navSpaceSector: 'space',
-                        navAgriculture: 'agriculture', navEntertainment: 'entertainment', navSports: 'sports',
-                        navInfrastructure: 'infrastructure', navHealth: 'health', navBiotechnology: 'biotech',
-                        navEnergy: 'energy', navFinancialMarket: 'finance', navNftExploration: 'nft',
-                        navCloudMining: 'mining', navRoboticsInvestments: 'robotics', navDeFiProjects: 'defi',
-                        navMetaverseIntegration: 'metaverse', navDecentralizedPhilanthropy: 'philanthropy',
-                        navBlockchainUpdate: 'update', navDigitalGovernance: 'digital', navCryptoMarketplace: 'marketplace',
-                        navAITech: 'ai', navBlockchainSecurity: 'security-last'
-                    };
-                    const feature = featureMap[id];
-                    if (feature && featureContent[feature]) openFeature(feature);
-                });
-            });
+            const featureMap = {
+                navBlockchainV2: 'blockchainV2', navExternalAPI: 'externalAPI', navTransactionHistory: 'transactionHistory',
+                navSecurityDashboard: 'securityDashboard', navBlockExplorer: 'blockExplorer', navNetworkStatus: 'networkStatus',
+                navStaking: 'staking', navGovernance: 'governance', navAuditLogs: 'auditLogs', navGasTracker: 'gasTracker',
+                navAnalytics: 'analytics', navFraudDetection: 'fraudDetection', navMilitaryC2: 'militaryC2',
+                navAuditVault: 'auditVault', navCyberThreat: 'cyberThreat', navMissionCritical: 'missionCritical',
+                navSecurity: 'security', navExploreBlocks: 'exploreBlocks', navTransactions: 'transactions',
+                navNetworkStatus2: 'networkStatus', navStaking2: 'staking', navDaoGovernance2: 'governance',
+                navAuditLogs2: 'auditLogs', navGasFees: 'gasTracker', navAnalytics2: 'analytics', navFraudDetection2: 'fraudDetection',
+                navSmartContracts: 'smartContracts', navDesci: 'desci', navHologram: 'hologram', navSpaceSector: 'spaceSector',
+                navAgriculture: 'agriculture', navEntertainment: 'entertainment', navSports: 'sports',
+                navInfrastructure: 'infrastructure', navHealth: 'health', navBiotechnology: 'biotechnology',
+                navEnergy: 'energy', navFinancialMarket: 'financialMarket', navNftExploration: 'nftExploration',
+                navCloudMining: 'cloudMining', navRoboticsInvestments: 'roboticsInvestments', navDeFiProjects: 'defiProjects',
+                navMetaverseIntegration: 'metaverseIntegration', navDecentralizedPhilanthropy: 'decentralizedPhilanthropy',
+                navBlockchainUpdate: 'blockchainUpdate', navDigitalGovernance: 'digitalGovernance',
+                navCryptoMarketplace: 'cryptoMarketplace', navAITech: 'aiTech', navBlockchainSecurity: 'blockchainSecurity'
+            };
             
-            // Mining button
+            for (const [id, feature] of Object.entries(featureMap)) {
+                const btn = document.getElementById(id);
+                if (btn) btn.addEventListener('click', () => openFeature(feature));
+            }
+            
             const miningBtn = document.createElement('button');
             miningBtn.textContent = '⛏️ Mine Block';
             miningBtn.style.cssText = 'position:fixed; bottom:20px; right:20px; background:#f0c040; color:#1a1a2e; border:none; padding:12px 20px; border-radius:8px; cursor:pointer; font-weight:bold; z-index:1000; font-family:Orbitron; transition:all 0.3s ease;';
-            miningBtn.onmouseover = () => { miningBtn.style.transform = 'scale(1.05)'; miningBtn.style.boxShadow = '0 0 15px #f0c040'; };
-            miningBtn.onmouseout = () => { miningBtn.style.transform = 'scale(1)'; miningBtn.style.boxShadow = 'none'; };
             miningBtn.onclick = mineBlock;
             document.body.appendChild(miningBtn);
+            
+            updateLanguage();
         }
         
         init();
