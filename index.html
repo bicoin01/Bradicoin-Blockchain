@@ -3894,6 +3894,19 @@ function getLanguageName(code) {
     return names[code] || code;
 }
 
+// ============================================
+// FUNÇÃO DE MUDANÇA DE IDIOMA
+// ============================================
+
+function changeLanguage(lang) {
+    console.log('🌐 Mudando idioma para:', lang);
+    currentLang = lang;
+    document.body.classList.toggle('arabic', lang === 'ar');
+    localStorage.setItem('bradicoin_language', lang);
+    updateLanguage();
+    showNotification('🌐 Idioma alterado para: ' + getLanguageName(lang), '#00ffff');
+}
+
     // ============================================
 // FUNÇÃO UPDATE LANGUAGE - CORRIGIDA
 // ============================================
