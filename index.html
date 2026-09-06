@@ -1098,12 +1098,12 @@
     </a>
 
     <!-- SELETOR DE IDIOMA -->
-    <select class="language-select" id="languageSelect" style="padding: 8px 12px; font-size: 12px; border: 2px solid #00ffff; border-radius: 50px; background: rgba(0, 0, 0, 0.7); color: #00ffff; box-shadow: 0 0 10px rgba(0, 255, 255, 0.2); cursor: pointer; font-family: 'Orbitron', monospace; backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); transition: all 0.3s ease; appearance: none; -webkit-appearance: none; padding-right: 30px; background-image: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12"%3E%3Cpath fill="%2300ffff" d="M6 8L1 3h10z"/%3E%3C/svg%3E'); background-repeat: no-repeat; background-position: right 10px center;">
-        <option value="en">🌐 English</option>
-        <option value="pt">🇧🇷 Português</option>
-        <option value="es">🇪🇸 Español</option>
-        <option value="ar">🇸🇦 العربية</option>
-    </select>
+<select class="language-select" id="languageSelect" onchange="changeLanguage(this.value)" style="...">
+    <option value="en">🌐 English</option>
+    <option value="pt">🇧🇷 Português</option>
+    <option value="es">🇪🇸 Español</option>
+    <option value="ar">🇸🇦 العربية</option>
+</select>
 </div>
         <div class="main-content" id="mainContent">
             <h1 class="title animate-glow" id="pageTitle" data-i18n="pageTitle">Bradicoin Blockchain</h1>
