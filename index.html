@@ -3972,10 +3972,33 @@ function updateLanguage() {
     loadRealTransactions();
     updateStakingStats();
     updateValidatorsDisplay();
+
+    // Traduz o texto "initializing..." do gráfico
+    const chartUpdateEl = document.getElementById('chartLastUpdate');
+    if (chartUpdateEl) {
+        chartUpdateEl.textContent = '⏳ ' + (t.initializing || 'initializing...');
+    }
+    
+    // Traduz o título "Quantum Governance" do modal
+    const quantumTitle = document.getElementById('quantumModalTitle');
+    if (quantumTitle) {
+        quantumTitle.textContent = '⚛️ ' + (t.quantumGovernance || 'Quantum Governance');
+    }
+    
+    // Traduz os botões "Create Proposal", "View Proposals", "Quantum Stats" no painel quantum
+    document.querySelectorAll('#quantumGovernancePanel .panel-header + div + div button').forEach(btn => {
+        const text = btn.textContent.trim();
+        if (text.includes('Create Proposal')) {
+            btn.textContent = '⚛️ ' + (t.createProposal || 'Create Proposal');
+        } else if (text.includes('View Proposals')) {
+            btn.textContent = '📋 ' + (t.viewProposals || 'View Proposals');
+        } else if (text.includes('Quantum Stats')) {
+            btn.textContent = '📊 ' + (t.quantumStats || 'Quantum Stats');
+        }
+    });
     
     console.log(`✅ Idioma atualizado para: ${currentLang}`);
 }
-
     // ===== ADICIONE ESTAS LINHAS =====
     
     // Traduz o texto "initializing..." do gráfico
