@@ -2815,7 +2815,7 @@ const translations = {
         stealthMode: 'Modo Furtivo',
         multiSig: 'Multi-Sig',
         supported: '✅ Suportado',
-        zkActive: '🟢 Ativo
+        zkActive: '🟢 Ativo - ',
         zkVerifier: '🔐 VERIFICADOR ZK-SNARK',
         verification: 'Verificação',
         zkTX: 'ZK TX',
@@ -3895,7 +3895,7 @@ function getLanguageName(code) {
 }
 
     // ============================================
-// FUNÇÕES DE IDIOMA - CORRIGIDAS
+// FUNÇÃO UPDATE LANGUAGE - CORRIGIDA
 // ============================================
 
 function updateLanguage() {
@@ -3920,7 +3920,7 @@ function updateLanguage() {
     document.querySelectorAll('[data-i18n]').forEach(el => {
         const key = el.getAttribute('data-i18n');
         if (t[key] !== undefined && t[key] !== null) {
-            // Verifica se o elemento tem emoji no início
+            // Mantém emojis se existirem
             const emojiMatch = el.textContent.match(/^([\u{1F000}-\u{1FFFF}]|[\u2600-\u27BF]|[\u{1F300}-\u{1F5FF}]|[\u{1F600}-\u{1F64F}]|[\u{1F680}-\u{1F6FF}]|[\u{1F900}-\u{1F9FF}]|[🔗🛡️💰📜📦🪙🌐📊⛽📈🚨🎖️🔒💀⚡🔍🏛️📝🔬🌀🚀🏭🌾🎬⚽🏗️🏥🧬⚡📈🎨⛏️🤖💎🌌❤️⚙️🔄⚖️🏪🔐✅❌⚠️💡🔍🌐📚🩺🔑🔄⏱️])/u);
             if (emojiMatch) {
                 el.textContent = emojiMatch[0] + ' ' + t[key];
@@ -3955,10 +3955,10 @@ function updateLanguage() {
         langSelect.value = currentLang;
     }
     
-    // Recarrega as transações e estatísticas
-   loadRealTransactions();
-   updateStakingStats();
-   updateValidatorsDisplay();
+    // Atualiza as transações e estatísticas
+    loadRealTransactions();
+    updateStakingStats();
+    updateValidatorsDisplay();
     
     console.log(`✅ Idioma atualizado para: ${currentLang}`);
 }
@@ -5686,15 +5686,6 @@ async function init() {
     document.getElementById('refreshBalanceBtn')?.addEventListener('click', function(e) { e.preventDefault(); searchWallet(); });
     document.getElementById('refreshHistory')?.addEventListener('click', function() { loadRealTransactions(); showNotification('⟳ ' + (translations[currentLang]?.refresh || 'Refreshed!'), '#00ccff'); });
     
-    // EVENTO DO SELETOR DE IDIOMA - CORRIGIDO (APENAS 1 VEZ)
-    document.getElementById('languageSelect')?.addEventListener('change', function(e) {
-        currentLang = e.target.value;
-        console.log('🌐 Idioma selecionado:', currentLang);
-        document.body.classList.toggle('arabic', currentLang === 'ar');
-        updateLanguage();
-        showNotification('🌐 Idioma alterado para: ' + getLanguageName(currentLang), '#00ffff');
-    });
-
     // PAINEL QUANTUM
     setTimeout(() => {
         addQuantumGovernancePanel();
