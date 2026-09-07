@@ -2295,6 +2295,11 @@
                 <option value="pt">🇧🇷 Português</option>
                 <option value="es">🇪🇸 Español</option>
                 <option value="ar">🇸🇦 العربية</option>
+                <option value="de">🇩🇪 Deutsch</option>
+                <option value="it">🇮🇹 Italiano</option>
+                <option value="fr">🇫🇷 Français</option>
+                <option value="ru">🇷🇺 Русский</option>
+                <option value="ko">🇰🇷 한국어</option> 
             </select>
         </div>
 
@@ -4688,7 +4693,7 @@ const payment = await client.createPayment({
         }
 
         function getLanguageName(code) {
-            const names = { en: 'English', pt: 'Português', es: 'Español', ar: 'العربية' };
+            const names = { en: 'English', pt: 'Português', es: 'Español', ar: 'العربية' , de: 'Deutsch', it: 'Italiano', fr: 'Français', ru: 'Русский', ko: '한국어' };
             return names[code] || code;
         }
 
